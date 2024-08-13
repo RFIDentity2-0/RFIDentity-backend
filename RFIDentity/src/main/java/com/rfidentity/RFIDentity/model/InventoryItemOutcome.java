@@ -1,6 +1,14 @@
 package com.rfidentity.RFIDentity.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -37,67 +45,4 @@ public class InventoryItemOutcome {
     @Column(name = "scanned_date")
     private LocalDate scannedDate;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public InventoryItem getInventoryItemId() {
-        return inventoryItemId;
-    }
-
-    public void setInventoryItemId(InventoryItem inventoryItemId) {
-        this.inventoryItemId = inventoryItemId;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getAssetId() {
-        return assetId;
-    }
-
-    public void setAssetId(String assetId) {
-        this.assetId = assetId;
-    }
-
-    public LocalDate getScannedDate() {
-        return scannedDate;
-    }
-
-    public void setScannedDate(LocalDate scannedDate) {
-        this.scannedDate = scannedDate;
-    }
 }

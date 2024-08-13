@@ -1,8 +1,14 @@
 package com.rfidentity.RFIDentity.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
-
 
 import java.util.List;
 import java.time.LocalDate;
@@ -28,42 +34,4 @@ public class Inventory {
     @OneToMany(mappedBy = "inventoryId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VmItem> sapItems;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public List<InventoryItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<InventoryItem> items) {
-        this.items = items;
-    }
-    public List<VmItem> getVmItems() {
-        return vmItems;
-    }
-
-    public void setVmItems(List<VmItem> vmItems) {
-        this.vmItems = vmItems;
-    }
-
-    public List<VmItem> getSapItems() {
-        return sapItems;
-    }
-
-    public void setSapItems(List<VmItem> sapItems) {
-        this.sapItems = sapItems;
-    }
 }
