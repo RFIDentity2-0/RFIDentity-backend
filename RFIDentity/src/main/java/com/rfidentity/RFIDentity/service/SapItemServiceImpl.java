@@ -34,6 +34,8 @@ public class SapItemServiceImpl implements SapItemService {
         dto.setRoom(sapItem.getRoom());
         dto.setAssetId(sapItem.getAssetId());
 
+        dto.setInventoryId(sapItem.getInventoryId().getId());
+
         return dto;
     }
 }

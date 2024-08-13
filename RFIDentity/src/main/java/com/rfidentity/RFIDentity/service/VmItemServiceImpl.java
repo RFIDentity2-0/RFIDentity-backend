@@ -47,7 +47,7 @@ public class VmItemServiceImpl implements VmItemService {
         dto.setRoom(vmItem.getRoom());
         dto.setAssetId(vmItem.getAssetId());
 
-
+        dto.setInventoryId(vmItem.getInventoryId().getId());
 
         return dto;
     }

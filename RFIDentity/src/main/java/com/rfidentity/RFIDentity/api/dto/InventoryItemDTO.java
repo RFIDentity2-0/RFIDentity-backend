@@ -8,5 +8,5 @@ public class InventoryItemDTO {
     private long id;
     private String sapItemId;
     private String vmItemId;
-    private InventoryDTO inventoryId;
+    private long inventoryId;
 }

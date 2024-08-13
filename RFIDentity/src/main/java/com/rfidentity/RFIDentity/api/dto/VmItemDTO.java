@@ -32,5 +32,5 @@ public class VmItemDTO {
     private String building;
     private String room;
     private String assetId;
-    private InventoryDTO inventoryId;
+    private long inventoryId;
 }

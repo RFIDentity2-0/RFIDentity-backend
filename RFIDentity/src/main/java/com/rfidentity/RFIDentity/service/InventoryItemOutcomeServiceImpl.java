@@ -36,21 +36,7 @@ public class InventoryItemOutcomeServiceImpl implements InventoryItemOutcomeServ
         dto.setAssetId(inventoryItemOutcome.getAssetId());
         dto.setStatus(inventoryItemOutcome.getStatus());
 
-        if (inventoryItemOutcome.getInventoryItemId() != null) {
-            InventoryItemDTO inventoryItemDTO = new InventoryItemDTO();
-            inventoryItemDTO.setId(inventoryItemOutcome.getInventoryItemId().getId());
-            inventoryItemDTO.setSapItemId(inventoryItemOutcome.getInventoryItemId().getSapItemId());
-            inventoryItemDTO.setVmItemId(inventoryItemOutcome.getInventoryItemId().getVmItemId());
-
-            if (inventoryItemOutcome.getInventoryItemId().getInventoryId() != null) {
-                InventoryDTO inventoryDTO = new InventoryDTO();
-                inventoryDTO.setId(inventoryItemOutcome.getInventoryItemId().getInventoryId().getId());
-                inventoryDTO.setDate(inventoryItemOutcome.getInventoryItemId().getInventoryId().getDate());
-                inventoryItemDTO.setInventoryId(inventoryDTO);
-            }
-
-            dto.setInventoryItemId(inventoryItemDTO);
-        }
+        dto.setInventoryItemId(inventoryItemOutcome.getInventoryItemId().getId());
 
         return dto;
     }

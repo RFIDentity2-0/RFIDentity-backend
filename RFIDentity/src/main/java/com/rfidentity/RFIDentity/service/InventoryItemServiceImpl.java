@@ -31,6 +31,7 @@ public class InventoryItemServiceImpl implements InventoryItemService {
         dto.setSapItemId(inventoryItem.getSapItemId());
         dto.setVmItemId(inventoryItem.getVmItemId());
 
+        dto.setInventoryId(inventoryItem.getInventoryId().getId());
 
         return dto;
     }

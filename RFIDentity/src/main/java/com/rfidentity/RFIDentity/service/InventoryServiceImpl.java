@@ -38,11 +38,6 @@ public class InventoryServiceImpl implements InventoryService {
         dto.setId(inventory.getId());
         dto.setDate(inventory.getDate());
 
-
-        dto.setSapItems(sapItemService.getAllSapItem());
-        dto.setVmItems(vmItemService.getAllVmItem());
-        dto.setInventoryItems(inventoryItemService.getAllInventoryItem());
-
         return dto;
     }
 }

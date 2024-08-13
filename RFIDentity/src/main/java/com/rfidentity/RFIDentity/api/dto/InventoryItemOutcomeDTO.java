@@ -16,5 +16,5 @@ public class InventoryItemOutcomeDTO {
     private String description;
     private String assetId;
     private LocalDate scannedDate;
-    private InventoryItemDTO inventoryItemId;
+    private long inventoryItemId;
 }

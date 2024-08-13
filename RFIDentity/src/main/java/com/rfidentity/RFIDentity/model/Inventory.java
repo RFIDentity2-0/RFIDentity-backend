@@ -32,6 +32,6 @@ public class Inventory {
     private List<VmItem> vmItems;
 
     @OneToMany(mappedBy = "inventoryId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VmItem> sapItems;
+    private List<SapItem> sapItems;
 
 }

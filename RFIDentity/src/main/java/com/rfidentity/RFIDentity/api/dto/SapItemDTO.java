@@ -13,5 +13,5 @@ public class SapItemDTO {
     private String description;
     private String room;
     private String assetId;
-    private InventoryDTO inventoryId;
+    private long inventoryId;
 }

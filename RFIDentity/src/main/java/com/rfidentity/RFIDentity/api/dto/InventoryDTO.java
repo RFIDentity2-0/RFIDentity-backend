@@ -9,7 +9,4 @@ import java.util.List;
 public class InventoryDTO {
     private long id;
     private LocalDate date;
-    private List<SapItemDTO> sapItems;
-    private List<VmItemDTO> vmItems;
-    private List<InventoryItemDTO> inventoryItems;
 }
