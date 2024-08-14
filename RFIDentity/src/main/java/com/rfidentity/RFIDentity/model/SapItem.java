@@ -1,6 +1,14 @@
 package com.rfidentity.RFIDentity.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -36,67 +44,4 @@ public class SapItem {
     @Column(name = "asset_id")
     private String assetId;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Inventory getInventoryId() {
-        return inventoryId;
-    }
-
-    public void setInventoryId(Inventory inventoryId) {
-        this.inventoryId = inventoryId;
-    }
-
-    public long getAssetNo() {
-        return assetNo;
-    }
-
-    public void setAssetNo(long assetNo) {
-        this.assetNo = assetNo;
-    }
-
-    public long getSubNo() {
-        return subNo;
-    }
-
-    public void setSubNo(long subNo) {
-        this.subNo = subNo;
-    }
-
-    public LocalDate getCapitalizedDate() {
-        return capitalizedDate;
-    }
-
-    public void setCapitalizedDate(LocalDate capitalizedDate) {
-        this.capitalizedDate = capitalizedDate;
-    }
-
-    public String getAssetId() {
-        return assetId;
-    }
-
-    public void setAssetId(String assetId) {
-        this.assetId = assetId;
-    }
-
-    public String getRoom() {
-        return room;
-    }
-
-    public void setRoom(String room) {
-        this.room = room;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }
