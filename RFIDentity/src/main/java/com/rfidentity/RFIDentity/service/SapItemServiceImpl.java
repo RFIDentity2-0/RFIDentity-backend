@@ -64,6 +64,10 @@ public class SapItemServiceImpl implements SapItemService {
                 DataFormatter dataFormatter = new DataFormatter();
                 int index = 0;
                 for (Row row : sheet) {
+                    if(index++ == 0) continue;
+                    SapItem sapItem = new SapItem();
+                    if(row.getCell(0) != null && row.getCell(0).getCellType())
+
 
                 }
             })
