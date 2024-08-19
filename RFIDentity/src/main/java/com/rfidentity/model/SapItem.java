@@ -44,4 +44,9 @@ public class SapItem {
     @Column(name = "asset_id")
     private String assetId;
 
+    public void setRowNum(Integer rowNum) {
+    }
+
+    public void setCellValue(String cellValue) {
+    }
 }

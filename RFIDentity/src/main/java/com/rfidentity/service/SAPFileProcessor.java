@@ -1,6 +1,5 @@
 package com.rfidentity.service;
 
-import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 import org.dhatim.fastexcel.reader.Sheet;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 @Component
@@ -24,14 +24,33 @@ public class SAPFileProcessor {
         try (
                 FileInputStream fis = new FileInputStream(file);
                 ReadableWorkbook wb = new ReadableWorkbook(fis)
-        ) {
+            ) {
+
             Sheet sheet = wb.getFirstSheet();
             try (Stream<Row> rows = sheet.openStream()) {
                 rows.forEach(r -> {
-                    data.put(r.getRowNum(), new ArrayList<>());
+                    List<String> rowData = new ArrayList<>();
+                    data.put(r.getRowNum(), rowData);
 
-                    for (Cell cell : r) {
-                        data.get(r.getRowNum()).add(cell.getRawValue());
+                  
+                    AtomicReference<String> column0 = new AtomicReference<>();
+                    AtomicReference<String> column1 = new AtomicReference<>();
+
+
+                    r.forEach(cell -> {
+                        int columnIndex = cell.getColumnIndex();
+                        String cellValue = cell.getRawValue();
+
+                        if (columnIndex == 0) {
+                            column0.set(cellValue);
+                        } else if (columnIndex == 1) {
+                            column1.set(cellValue);
+                        } if (columnIndex == 0 || columnIndex == 1 || columnIndex == 2 || columnIndex == 3 || columnIndex == 8) {
+                            rowData.add(cellValue);
+                        }
+                    });
+                    if (column0.get() != null && column1.get() != null) {
+                        rowData.add(column0 + "-" + column1);
                     }
                 });
             }
@@ -39,5 +58,4 @@ public class SAPFileProcessor {
 
         return data;
     }
-
 }
