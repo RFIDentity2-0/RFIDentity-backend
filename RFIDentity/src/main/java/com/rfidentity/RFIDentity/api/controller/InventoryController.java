@@ -3,6 +3,8 @@ package com.rfidentity.RFIDentity.api.controller;
 import com.rfidentity.RFIDentity.api.dto.DashboardDTO;
 import com.rfidentity.RFIDentity.api.dto.DiffDTO;
 import com.rfidentity.RFIDentity.api.dto.DiffSapItemDTO;
+import com.rfidentity.RFIDentity.api.dto.DiffVmItemDTO;
+import com.rfidentity.RFIDentity.api.dto.InventoryDTO;
 import com.rfidentity.RFIDentity.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -20,7 +23,6 @@ public class InventoryController {
 
     @Autowired
     private InventoryService inventoryService;
-
     @GetMapping("/getDashboard")
     public ResponseEntity<Map<String, Object>> getAllCombinedItems(
             @RequestParam(defaultValue = "0") int page,
@@ -54,5 +56,21 @@ public class InventoryController {
 
         String responseMessage = inventoryService.updateSapItem(assetId, inventoryId, diffSapItemDTO);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+    }
+
+    @PutMapping("/updateVmItem/{inventoryId}/{assetId}")
+    public ResponseEntity<String> updateVmItem(
+            @PathVariable String assetId,
+            @PathVariable Long inventoryId,
+            @RequestBody DiffVmItemDTO diffVmItemDTO) {
+
+        String responseMessage = inventoryService.updateVmItem(assetId, inventoryId, diffVmItemDTO);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllInventories")
+    public ResponseEntity<List<InventoryDTO>> getAllInventory(){
+        List<InventoryDTO> responseInventory = inventoryService.getAllInventory();
+        return new ResponseEntity<>(responseInventory, HttpStatus.OK);
     }
 }

@@ -3,6 +3,8 @@ package com.rfidentity.RFIDentity.service;
 import com.rfidentity.RFIDentity.api.dto.DashboardDTO;
 import com.rfidentity.RFIDentity.api.dto.DiffDTO;
 import com.rfidentity.RFIDentity.api.dto.DiffSapItemDTO;
+import com.rfidentity.RFIDentity.api.dto.DiffVmItemDTO;
+import com.rfidentity.RFIDentity.api.dto.InventoryDTO;
 import com.rfidentity.RFIDentity.model.Inventory;
 import com.rfidentity.RFIDentity.model.SapItem;
 import com.rfidentity.RFIDentity.model.VmItem;
@@ -37,13 +39,18 @@ public class InventoryServiceImpl implements InventoryService {
     public Page<DashboardDTO> getAllDashboardItems(int page, int size, Long inventoryId) {
         Pageable pageable = PageRequest.of(page, size);
 
+        List<Inventory> inventories = inventoryRepo.findFirstByOrderByIdDesc();
+
         Inventory selectedInventory;
         if (inventoryId != null) {
             selectedInventory = inventoryRepo.findById(inventoryId)
                     .orElseThrow(() -> new RuntimeException("Inventory not found"));
         } else {
-            selectedInventory = inventoryRepo.findFirstByOrderByIdDesc()
-                    .orElseThrow(() -> new RuntimeException("No inventories found"));
+            if (inventories.isEmpty()) {
+                throw new RuntimeException("No inventories found");
+            } else {
+                selectedInventory = inventories.get(0);
+            }
         }
 
         List<SapItem> sapItems = sapItemRepo.findByInventoryId(selectedInventory, pageable);
@@ -129,4 +136,39 @@ public class InventoryServiceImpl implements InventoryService {
         return "SapItem updated successfully";
     }
 
+    @Override
+    public String updateVmItem(String assetId, Long inventoryId, DiffVmItemDTO diffVmItemDTO) {
+        Inventory inventory = inventoryRepo.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        VmItem vmItem = vmItemRepo.findByAssetIdAndInventoryId(assetId, inventory)
+                .orElseThrow(() -> new RuntimeException("SapItem not found"));
+
+        vmItem.setSystemName(diffVmItemDTO.getSystemName());
+        vmItem.setDnsName(diffVmItemDTO.getDnsName());
+        vmItem.setType(diffVmItemDTO.getType());
+        vmItem.setManufacturer(diffVmItemDTO.getManufacturer());
+        vmItem.setHardwareType(diffVmItemDTO.getHardwareType());
+        vmItem.setSerialNo(diffVmItemDTO.getSerialNo());
+        vmItem.setStatus(diffVmItemDTO.getStatus());
+        vmItem.setDepartment(diffVmItemDTO.getDepartment());
+
+        vmItemRepo.save(vmItem);
+
+        return "VmItem updated successfully";
+    }
+
+    @Override
+    public List<InventoryDTO> getAllInventory(){
+
+        List<Inventory> inventories = inventoryRepo.findFirstByOrderByIdDesc();
+
+        return inventories.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    private InventoryDTO convertToDTO(Inventory inventory){
+        InventoryDTO inventoryDTO = new InventoryDTO();
+        inventoryDTO.setId(inventory.getId());
+        return inventoryDTO;
+    }
 }
