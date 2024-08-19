@@ -9,6 +9,5 @@ import java.util.List;
 @Data
 public class InventoryDTO {
     private long id;
-    @JsonIgnore
     private LocalDate date;
 }
