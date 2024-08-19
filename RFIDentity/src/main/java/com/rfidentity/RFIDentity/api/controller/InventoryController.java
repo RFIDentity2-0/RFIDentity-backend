@@ -1,5 +1,6 @@
 package com.rfidentity.RFIDentity.api.controller;
 
+import com.rfidentity.RFIDentity.api.dto.ApiResponse;
 import com.rfidentity.RFIDentity.api.dto.DashboardDTO;
 import com.rfidentity.RFIDentity.api.dto.DiffDTO;
 import com.rfidentity.RFIDentity.api.dto.DiffSapItemDTO;
@@ -49,23 +50,33 @@ public class InventoryController {
     }
 
     @PutMapping("/updateSapItem/{inventoryId}/{assetId}")
-    public ResponseEntity<String> updateSapItem(
-            @PathVariable String assetId,
+    public ResponseEntity<ApiResponse> updateSapItem(
             @PathVariable Long inventoryId,
+            @PathVariable String assetId,
             @RequestBody DiffSapItemDTO diffSapItemDTO) {
 
-        String responseMessage = inventoryService.updateSapItem(assetId, inventoryId, diffSapItemDTO);
-        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+        try{
+            String responseMessage = inventoryService.updateSapItem(assetId, inventoryId, diffSapItemDTO);
+            return new ResponseEntity<>(new ApiResponse(responseMessage), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new ApiResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @PutMapping("/updateVmItem/{inventoryId}/{assetId}")
-    public ResponseEntity<String> updateVmItem(
-            @PathVariable String assetId,
+    public ResponseEntity<ApiResponse> updateVmItem(
             @PathVariable Long inventoryId,
+            @PathVariable String assetId,
             @RequestBody DiffVmItemDTO diffVmItemDTO) {
 
-        String responseMessage = inventoryService.updateVmItem(assetId, inventoryId, diffVmItemDTO);
-        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+        try{
+            String responseMessage = inventoryService.updateVmItem(assetId, inventoryId, diffVmItemDTO);
+            return new ResponseEntity<>(new ApiResponse(responseMessage), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(new ApiResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @GetMapping("/getAllInventories")

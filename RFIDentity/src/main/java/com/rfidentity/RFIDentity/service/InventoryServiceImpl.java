@@ -5,6 +5,7 @@ import com.rfidentity.RFIDentity.api.dto.DiffDTO;
 import com.rfidentity.RFIDentity.api.dto.DiffSapItemDTO;
 import com.rfidentity.RFIDentity.api.dto.DiffVmItemDTO;
 import com.rfidentity.RFIDentity.api.dto.InventoryDTO;
+import com.rfidentity.RFIDentity.api.dto.mapper.InventoryMapper;
 import com.rfidentity.RFIDentity.model.Inventory;
 import com.rfidentity.RFIDentity.model.SapItem;
 import com.rfidentity.RFIDentity.model.VmItem;
@@ -34,6 +35,12 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
     private InventoryRepo inventoryRepo;
+
+    private final InventoryMapper inventoryMapper = InventoryMapper.INSTANCE;
+
+    public InventoryServiceImpl(InventoryRepo inventoryRepo) {
+        this.inventoryRepo = inventoryRepo;
+    }
 
     @Override
     public Page<DashboardDTO> getAllDashboardItems(int page, int size, Long inventoryId) {
@@ -159,17 +166,9 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<InventoryDTO> getAllInventory(){
-
-        List<Inventory> inventories = inventoryRepo.findFirstByOrderByIdDesc();
-
-        return inventories.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    private InventoryDTO convertToDTO(Inventory inventory){
-        InventoryDTO inventoryDTO = new InventoryDTO();
-        inventoryDTO.setId(inventory.getId());
-        inventoryDTO.setDate(inventory.getDate());
-        return inventoryDTO;
+    public List<InventoryDTO> getAllInventory() {
+        return inventoryRepo.findFirstByOrderByIdDesc().stream()
+                .map(inventoryMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }
