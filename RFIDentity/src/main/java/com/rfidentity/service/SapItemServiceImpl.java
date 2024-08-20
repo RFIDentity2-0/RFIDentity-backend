@@ -23,6 +23,11 @@ public class SapItemServiceImpl implements SapItemService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void save(SapItem sapItem) {
+        sapItemRepo.save(sapItem);
+    }
+
     private SapItemDTO convertToDTO(SapItem sapItem) {
         SapItemDTO dto = new SapItemDTO();
         dto.setId(sapItem.getId());

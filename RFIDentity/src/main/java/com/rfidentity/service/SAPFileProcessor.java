@@ -1,5 +1,6 @@
 package com.rfidentity.service;
 
+import com.rfidentity.model.SapItem;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 import org.dhatim.fastexcel.reader.Sheet;
@@ -26,33 +27,40 @@ public class SAPFileProcessor {
                 ReadableWorkbook wb = new ReadableWorkbook(fis)
             ) {
 
+
             Sheet sheet = wb.getFirstSheet();
-            try (Stream<Row> rows = sheet.openStream()) {
-                rows.forEach(r -> {
-                    List<String> rowData = new ArrayList<>();
-                    data.put(r.getRowNum(), rowData);
 
-                  
-                    AtomicReference<String> column0 = new AtomicReference<>();
-                    AtomicReference<String> column1 = new AtomicReference<>();
+            try (Stream<Row> rows  = sheet.openStream()) {
+                rows.skip(1)
+                    .forEach(r -> {
+                        List<String> rowData = new ArrayList<>();
+                        data.put(r.getRowNum(), rowData);
 
 
-                    r.forEach(cell -> {
-                        int columnIndex = cell.getColumnIndex();
-                        String cellValue = cell.getRawValue();
+                        AtomicReference<String> column0 = new AtomicReference<>();
+                        AtomicReference<String> column1 = new AtomicReference<>();
 
-                        if (columnIndex == 0) {
-                            column0.set(cellValue);
-                        } else if (columnIndex == 1) {
-                            column1.set(cellValue);
-                        } if (columnIndex == 0 || columnIndex == 1 || columnIndex == 2 || columnIndex == 3 || columnIndex == 8) {
-                            rowData.add(cellValue);
+
+                        int cellIdx = 0;
+                        r.forEach(cell -> {
+
+                            int columnIndex = cell.getColumnIndex();
+                            String cellValue = cell.getRawValue();
+
+                            if (columnIndex == 0) {
+                                column0.set(cellValue);
+                            } else if (columnIndex == 1) {
+                                column1.set(cellValue);
+                            } if (columnIndex == 0 || columnIndex == 1 || columnIndex == 2 || columnIndex == 3 || columnIndex == 8) {
+
+                                rowData.add(cellValue);
+
+                            }
+                        });
+                        if (column0.get() != null && column1.get() != null) {
+                            rowData.add(column0 + "-" + column1);
                         }
                     });
-                    if (column0.get() != null && column1.get() != null) {
-                        rowData.add(column0 + "-" + column1);
-                    }
-                });
             }
         }
 
