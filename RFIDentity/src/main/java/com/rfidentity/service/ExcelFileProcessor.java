@@ -29,7 +29,7 @@ public class ExcelFileProcessor implements FileProcessor {
             Map<Integer, List<String>> data = instance.readExcel(new File("src/main/resources/SAP_20240414.xlsx"));
             data.forEach((rowNum, rowData) -> {
                 SapItem sapItem = new SapItem();
-                sapItem.setInventoryId(0);
+
                 sapItem.setAssetNo(Long.parseLong(rowData.get(0)));
                 sapItem.setSubNo(Long.parseLong(rowData.get(1)));
 
