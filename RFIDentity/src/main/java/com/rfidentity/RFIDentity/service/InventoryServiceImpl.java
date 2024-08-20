@@ -135,8 +135,7 @@ public class InventoryServiceImpl implements InventoryService {
         SapItem sapItem = sapItemRepo.findByAssetIdAndInventoryId(assetId, inventory)
                 .orElseThrow(() -> new RuntimeException("SapItem not found"));
 
-        sapItem.setDescription(diffSapItemDTO.getDescription());
-        sapItem.setRoom(diffSapItemDTO.getRoom());
+        inventoryMapper.updateDiffSapItemFromDto(diffSapItemDTO, sapItem);
 
         sapItemRepo.save(sapItem);
 
@@ -149,16 +148,9 @@ public class InventoryServiceImpl implements InventoryService {
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
         VmItem vmItem = vmItemRepo.findByAssetIdAndInventoryId(assetId, inventory)
-                .orElseThrow(() -> new RuntimeException("SapItem not found"));
+                .orElseThrow(() -> new RuntimeException("VmItem not found"));
 
-        vmItem.setSystemName(diffVmItemDTO.getSystemName());
-        vmItem.setDnsName(diffVmItemDTO.getDnsName());
-        vmItem.setType(diffVmItemDTO.getType());
-        vmItem.setManufacturer(diffVmItemDTO.getManufacturer());
-        vmItem.setHardwareType(diffVmItemDTO.getHardwareType());
-        vmItem.setSerialNo(diffVmItemDTO.getSerialNo());
-        vmItem.setStatus(diffVmItemDTO.getStatus());
-        vmItem.setDepartment(diffVmItemDTO.getDepartment());
+        inventoryMapper.updateDiffVmItemFromDto(diffVmItemDTO, vmItem);
 
         vmItemRepo.save(vmItem);
 
