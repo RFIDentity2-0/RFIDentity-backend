@@ -130,57 +130,61 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Map<String, Object> getUniqueRooms(Long inventoryId, Pageable pageable) {
-
+    public Page<Map<String, List<Map<String, String>>>> getUniqueRooms(Long inventoryId, int page, int size) {
         Inventory inventory = inventoryRepo.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
+        // Pobierz dane z obu repozytoriów
         List<SapItem> sapItems = sapItemRepo.findAllByInventoryId(inventory);
         List<VmItem> vmItems = vmItemRepo.findAllByInventoryId(inventory);
 
-        Map<String, List<RoomItemDTO>> roomItemsMap = new HashMap<>();
+        // Utwórz mapę do przechowywania połączonych danych według pokoju
+        Map<String, List<Map<String, String>>> roomMap = new HashMap<>();
+
+        // Utwórz mapę do szybkiego dostępu do VmItem na podstawie assetId
+        Map<String, VmItem> vmItemMap = vmItems.stream()
+                .collect(Collectors.toMap(VmItem::getAssetId, Function.identity()));
 
         for (SapItem sapItem : sapItems) {
-            String room = sapItem.getRoom() != null ? sapItem.getRoom() : "Unknown Room";
             String assetId = sapItem.getAssetId();
-            String description = sapItem.getDescription();
+            VmItem vmItem = vmItemMap.get(assetId);
 
-            RoomItemDTO roomItemDTO = new RoomItemDTO(assetId, description, null);
+            // Określ wartość room na podstawie dostępnych danych
+            String room = (sapItem.getRoom() != null && !sapItem.getRoom().isEmpty())
+                    ? sapItem.getRoom()
+                    : (vmItem != null && vmItem.getRoom() != null && !vmItem.getRoom().isEmpty())
+                    ? vmItem.getRoom()
+                    : "Unknown Room";
 
-            roomItemsMap.computeIfAbsent(room, k -> new ArrayList<>()).add(roomItemDTO);
+            Map<String, String> itemDetails = new HashMap<>();
+            itemDetails.put("assetId", assetId);
+            itemDetails.put("description", sapItem.getDescription());
+            itemDetails.put("status", vmItem != null ? vmItem.getStatus() : null);
+
+            // Dodaj do odpowiedniej listy pokoju
+            roomMap.computeIfAbsent(room, k -> new ArrayList<>()).add(itemDetails);
         }
 
-        for (VmItem vmItem : vmItems) {
-            String room = vmItem.getLocation() != null ? vmItem.getLocation() : "Unknown Room";
-            String assetId = vmItem.getAssetId();
-            String status = vmItem.getStatus();
+        // Logika paginacji
+        List<Map<String, List<Map<String, String>>>> paginatedRooms = roomMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey()) // Sortuj pokoje alfabetycznie
+                .skip(page * size)
+                .limit(size)
+                .map(entry -> {
+                    Map<String, List<Map<String, String>>> singleRoom = new HashMap<>();
+                    singleRoom.put(entry.getKey(), entry.getValue().stream()
+                            .sorted(Comparator.comparing(item -> item.get("assetId"))) // Sortuj elementy według assetId
+                            .limit(10) // Ogranicz do pierwszych 10 elementów na pokój
+                            .collect(Collectors.toList()));
+                    return singleRoom;
+                })
+                .collect(Collectors.toList());
 
-            RoomItemDTO roomItemDTO = new RoomItemDTO(assetId, null, status);
+        // Utwórz odpowiedź w formacie Page
+        int totalRooms = roomMap.size();
+        Page<Map<String, List<Map<String, String>>>> pagedResult = new PageImpl<>(
+                paginatedRooms, PageRequest.of(page, size), totalRooms);
 
-            roomItemsMap.computeIfAbsent(room, k -> new ArrayList<>()).add(roomItemDTO);
-        }
-
-        roomItemsMap.forEach((room, items) -> {
-            List<RoomItemDTO> sortedItems = items.stream()
-                    .sorted(Comparator.comparing(RoomItemDTO::getAssetId))
-                    .limit(10)
-                    .collect(Collectors.toList());
-            roomItemsMap.put(room, sortedItems);
-        });
-
-        List<Map.Entry<String, List<RoomItemDTO>>> roomItemsList = new ArrayList<>(roomItemsMap.entrySet());
-
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), roomItemsList.size());
-
-        List<Map.Entry<String, List<RoomItemDTO>>> paginatedRooms = roomItemsList.subList(start, end);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("totalElements", roomItemsList.size());
-        response.put("totalPages", (int) Math.ceil((double) roomItemsList.size() / pageable.getPageSize()));
-        response.put("content", paginatedRooms);
-
-        return response;
+        return pagedResult;
     }
 }

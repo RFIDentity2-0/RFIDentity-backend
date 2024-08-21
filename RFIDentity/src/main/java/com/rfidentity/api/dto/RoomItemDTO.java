@@ -11,4 +11,5 @@ public class RoomItemDTO {
     private String assetId;
     private String description;
     private String status;
+    private String room;
 }

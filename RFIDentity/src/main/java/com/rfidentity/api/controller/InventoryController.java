@@ -1,6 +1,7 @@
 package com.rfidentity.api.controller;
 
 import com.rfidentity.api.dto.InventoryDTO;
+import com.rfidentity.api.dto.RoomItemDTO;
 import com.rfidentity.service.InventoryService;
 import com.rfidentity.api.dto.DashboardDTO;
 import com.rfidentity.api.dto.DiffDTO;
@@ -25,13 +26,19 @@ public class InventoryController {
     private InventoryService inventoryService;
 
     @GetMapping("/getUniqueRooms")
-    public Map<String, Object> getUniqueRooms(
+    public ResponseEntity<Map<String, Object>> getUniqueRooms(
             @RequestParam Long inventoryId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "6") int size) {
+            @RequestParam(defaultValue = "8") int size) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        return inventoryService.getUniqueRooms(inventoryId, pageable);
+        Page<Map<String, List<Map<String, String>>>> resultPage = inventoryService.getUniqueRooms(inventoryId, page, size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", resultPage.getContent());
+        response.put("totalElements", resultPage.getTotalElements());
+        response.put("totalPages", resultPage.getTotalPages());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/getDashboard")
