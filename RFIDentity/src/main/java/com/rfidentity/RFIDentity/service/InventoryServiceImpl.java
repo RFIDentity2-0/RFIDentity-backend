@@ -2,8 +2,6 @@ package com.rfidentity.RFIDentity.service;
 
 import com.rfidentity.RFIDentity.api.dto.DashboardDTO;
 import com.rfidentity.RFIDentity.api.dto.DiffDTO;
-import com.rfidentity.RFIDentity.api.dto.DiffSapItemDTO;
-import com.rfidentity.RFIDentity.api.dto.DiffVmItemDTO;
 import com.rfidentity.RFIDentity.api.dto.InventoryDTO;
 import com.rfidentity.RFIDentity.api.dto.mapper.InventoryMapper;
 import com.rfidentity.RFIDentity.model.Inventory;
@@ -37,10 +35,6 @@ public class InventoryServiceImpl implements InventoryService {
     private InventoryRepo inventoryRepo;
 
     private final InventoryMapper inventoryMapper = InventoryMapper.INSTANCE;
-
-    public InventoryServiceImpl(InventoryRepo inventoryRepo) {
-        this.inventoryRepo = inventoryRepo;
-    }
 
     @Override
     public Page<DashboardDTO> getAllDashboardItems(int page, int size, Long inventoryId) {
@@ -125,36 +119,6 @@ public class InventoryServiceImpl implements InventoryService {
         }
 
         return diffDTOItems;
-    }
-
-    @Override
-    public String updateSapItem(String assetId, Long inventoryId, DiffSapItemDTO diffSapItemDTO) {
-        Inventory inventory = inventoryRepo.findById(inventoryId)
-                .orElseThrow(() -> new RuntimeException("Inventory not found"));
-
-        SapItem sapItem = sapItemRepo.findByAssetIdAndInventoryId(assetId, inventory)
-                .orElseThrow(() -> new RuntimeException("SapItem not found"));
-
-        inventoryMapper.updateDiffSapItemFromDto(diffSapItemDTO, sapItem);
-
-        sapItemRepo.save(sapItem);
-
-        return "SapItem updated successfully";
-    }
-
-    @Override
-    public String updateVmItem(String assetId, Long inventoryId, DiffVmItemDTO diffVmItemDTO) {
-        Inventory inventory = inventoryRepo.findById(inventoryId)
-                .orElseThrow(() -> new RuntimeException("Inventory not found"));
-
-        VmItem vmItem = vmItemRepo.findByAssetIdAndInventoryId(assetId, inventory)
-                .orElseThrow(() -> new RuntimeException("VmItem not found"));
-
-        inventoryMapper.updateDiffVmItemFromDto(diffVmItemDTO, vmItem);
-
-        vmItemRepo.save(vmItem);
-
-        return "VmItem updated successfully";
     }
 
     @Override

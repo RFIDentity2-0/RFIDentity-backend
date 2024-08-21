@@ -1,9 +1,6 @@
 package com.rfidentity.RFIDentity.service;
 
-import com.rfidentity.RFIDentity.api.dto.InventoryDTO;
-import com.rfidentity.RFIDentity.api.dto.InventoryItemDTO;
 import com.rfidentity.RFIDentity.api.dto.InventoryItemOutcomeDTO;
-import com.rfidentity.RFIDentity.model.InventoryItem;
 import com.rfidentity.RFIDentity.model.InventoryItemOutcome;
 import com.rfidentity.RFIDentity.repo.InventoryItemOutcomeRepo;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,5 @@
 package com.rfidentity.RFIDentity.service;
 
-
-import com.rfidentity.RFIDentity.api.dto.InventoryDTO;
 import com.rfidentity.RFIDentity.api.dto.InventoryItemDTO;
 import com.rfidentity.RFIDentity.model.InventoryItem;
 import com.rfidentity.RFIDentity.repo.InventoryItemRepo;

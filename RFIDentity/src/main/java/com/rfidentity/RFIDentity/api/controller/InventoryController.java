@@ -1,10 +1,7 @@
 package com.rfidentity.RFIDentity.api.controller;
 
-import com.rfidentity.RFIDentity.api.dto.ApiResponse;
 import com.rfidentity.RFIDentity.api.dto.DashboardDTO;
 import com.rfidentity.RFIDentity.api.dto.DiffDTO;
-import com.rfidentity.RFIDentity.api.dto.DiffSapItemDTO;
-import com.rfidentity.RFIDentity.api.dto.DiffVmItemDTO;
 import com.rfidentity.RFIDentity.api.dto.InventoryDTO;
 import com.rfidentity.RFIDentity.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,36 +44,6 @@ public class InventoryController {
 
         DiffDTO diffResults = inventoryService.getDiffItems(inventoryId, assetId);
         return new ResponseEntity<>(diffResults, HttpStatus.OK);
-    }
-
-    @PutMapping("/updateSapItem/{inventoryId}/{assetId}")
-    public ResponseEntity<ApiResponse> updateSapItem(
-            @PathVariable Long inventoryId,
-            @PathVariable String assetId,
-            @RequestBody DiffSapItemDTO diffSapItemDTO) {
-
-        try{
-            String responseMessage = inventoryService.updateSapItem(assetId, inventoryId, diffSapItemDTO);
-            return new ResponseEntity<>(new ApiResponse(responseMessage), HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>(new ApiResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-    @PutMapping("/updateVmItem/{inventoryId}/{assetId}")
-    public ResponseEntity<ApiResponse> updateVmItem(
-            @PathVariable Long inventoryId,
-            @PathVariable String assetId,
-            @RequestBody DiffVmItemDTO diffVmItemDTO) {
-
-        try{
-            String responseMessage = inventoryService.updateVmItem(assetId, inventoryId, diffVmItemDTO);
-            return new ResponseEntity<>(new ApiResponse(responseMessage), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(new ApiResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
     }
 
     @GetMapping("/getAllInventories")

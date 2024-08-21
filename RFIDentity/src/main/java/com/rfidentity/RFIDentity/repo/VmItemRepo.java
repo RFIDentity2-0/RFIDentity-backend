@@ -1,7 +1,6 @@
 package com.rfidentity.RFIDentity.repo;
 
 import com.rfidentity.RFIDentity.model.Inventory;
-import com.rfidentity.RFIDentity.model.SapItem;
 import com.rfidentity.RFIDentity.model.VmItem;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

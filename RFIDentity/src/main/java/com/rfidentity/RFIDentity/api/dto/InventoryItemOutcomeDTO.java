@@ -1,7 +1,5 @@
 package com.rfidentity.RFIDentity.api.dto;
 
-import com.rfidentity.RFIDentity.model.InventoryItem;
-
 import lombok.Data;
 
 import java.time.LocalDate;

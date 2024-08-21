@@ -1,9 +1,7 @@
 package com.rfidentity.RFIDentity.service;
 
-import com.rfidentity.RFIDentity.api.dto.VmItemDTO;
-
-import java.util.List;
+import com.rfidentity.RFIDentity.api.dto.DiffVmItemDTO;
 
 public interface VmItemService {
-    List<VmItemDTO> getAllVmItem();
+    String updateVmItem(String assetId, Long inventoryId, DiffVmItemDTO diffVmItemDTO);
 }

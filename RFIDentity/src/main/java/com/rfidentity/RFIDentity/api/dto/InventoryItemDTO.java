@@ -1,6 +1,5 @@
 package com.rfidentity.RFIDentity.api.dto;
 
-import com.rfidentity.RFIDentity.model.Inventory;
 import lombok.Data;
 
 @Data
