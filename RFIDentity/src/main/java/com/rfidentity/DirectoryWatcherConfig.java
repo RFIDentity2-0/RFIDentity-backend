@@ -9,6 +9,7 @@ import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.time.Duration;
 
@@ -29,10 +30,8 @@ public class DirectoryWatcherConfig {
                 properties.daemon(),
                 Duration.ofMinutes(properties.pollInterval()),
                 Duration.ofMinutes(properties.quietPeriod()));
-        fileSystemWatcher.addSourceDirectory(
-                Path.of(properties.sapdirectory()).toFile());
-        fileSystemWatcher.addSourceDirectory(
-                Path.of(properties.vmdirectory()).toFile());
+        fileSystemWatcher.addSourceDirectory(new File(properties.sapdirectory()).toPath().toFile());
+        fileSystemWatcher.addSourceDirectory(new File(properties.vmdirectory()).toPath().toFile());
         fileSystemWatcher.addListener(
                 new ExcelFileChangeListener(excelFileProcessor, sapItemService));
         fileSystemWatcher.setTriggerFilter(

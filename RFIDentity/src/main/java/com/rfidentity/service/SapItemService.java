@@ -7,8 +7,7 @@ import java.util.List;
 
 public interface SapItemService {
     List<SapItemDTO> getAllSapItem();
-    void deleteAll();
     void save(SapItem sapItem);
-
     boolean isDatabaseEmpty();
+
 }

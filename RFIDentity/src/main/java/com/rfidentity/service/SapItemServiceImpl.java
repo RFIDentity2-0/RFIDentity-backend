@@ -22,10 +22,8 @@ public class SapItemServiceImpl implements SapItemService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-    @Override
-    public void deleteAll() {
-        sapItemRepo.deleteAll();
-    }
+
+
     @Override
     public void save(SapItem sapItem) {
         sapItemRepo.save(sapItem);
