@@ -35,12 +35,8 @@ public class SAPFileProcessor {
                     .forEach(r -> {
                         List<String> rowData = new ArrayList<>();
                         data.put(r.getRowNum(), rowData);
-
-
                         AtomicReference<String> column0 = new AtomicReference<>();
                         AtomicReference<String> column1 = new AtomicReference<>();
-
-
                         int cellIdx = 0;
                         r.forEach(cell -> {
 
@@ -52,9 +48,7 @@ public class SAPFileProcessor {
                             } else if (columnIndex == 1) {
                                 column1.set(cellValue);
                             } if (columnIndex == 0 || columnIndex == 1 || columnIndex == 2 || columnIndex == 3 || columnIndex == 8) {
-
                                 rowData.add(cellValue);
-
                             }
                         });
                         if (column0.get() != null && column1.get() != null) {

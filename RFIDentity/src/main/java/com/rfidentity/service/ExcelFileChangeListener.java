@@ -13,13 +13,26 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ExcelFileChangeListener implements FileChangeListener {
 
-    private final FileProcessor fileProcessor;
+    private final ExcelFileProcessor excelFileProcessor;
+    private final SapItemService sapItemService;
 
     @Override
     public void onChange(Set<ChangedFiles> changeSet) {
         for (ChangedFiles changedFiles : changeSet) {
             changedFiles.getFiles().stream()
-                    .forEach(f -> System.out.println("Got " + f.getFile().getAbsolutePath()));
+                    .filter(f -> f.getFile().getName().endsWith(".xlsx"))
+                    .forEach(f -> {
+                        log.info("Detected change in file: " + f.getFile().getAbsolutePath());
+
+                        try {
+                            sapItemService.deleteAll();
+                            excelFileProcessor.process(f.getFile().toPath());
+
+                            log.info("Data has been successfully updated from file: " + f.getFile().getAbsolutePath());
+                        } catch (Exception e) {
+                            log.error("Error processing file: " + f.getFile().getAbsolutePath(), e);
+                        }
+                    });
         }
     }
 }

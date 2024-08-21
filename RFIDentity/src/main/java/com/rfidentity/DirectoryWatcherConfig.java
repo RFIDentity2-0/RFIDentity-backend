@@ -1,8 +1,6 @@
 package com.rfidentity;
 
-import com.rfidentity.service.DirectoryWatcherProperties;
-import com.rfidentity.service.ExcelFileChangeListener;
-import com.rfidentity.service.FileProcessor;
+import com.rfidentity.service.*;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +20,8 @@ import java.time.Duration;
 public class DirectoryWatcherConfig {
 
     private final DirectoryWatcherProperties properties;
-    private final FileProcessor fileProcessor;
+    private final ExcelFileProcessor excelFileProcessor;
+    private final SapItemService sapItemService;
 
     @Bean
     FileSystemWatcher fileSystemWatcher() {
@@ -35,7 +34,7 @@ public class DirectoryWatcherConfig {
         fileSystemWatcher.addSourceDirectory(
                 Path.of(properties.vmdirectory()).toFile());
         fileSystemWatcher.addListener(
-                new ExcelFileChangeListener(fileProcessor));
+                new ExcelFileChangeListener(excelFileProcessor, sapItemService));
         fileSystemWatcher.setTriggerFilter(
                 f -> f.toPath().endsWith(".xlsx"));
         fileSystemWatcher.start();

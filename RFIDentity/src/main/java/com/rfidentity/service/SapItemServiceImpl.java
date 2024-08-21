@@ -22,11 +22,22 @@ public class SapItemServiceImpl implements SapItemService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
+    @Override
+    public void deleteAll() {
+        sapItemRepo.deleteAll();
+    }
     @Override
     public void save(SapItem sapItem) {
         sapItemRepo.save(sapItem);
     }
+
+    @Override
+    public boolean isDatabaseEmpty() {
+        return sapItemRepo.count() == 0;
+    }
+
+
+
 
     private SapItemDTO convertToDTO(SapItem sapItem) {
         SapItemDTO dto = new SapItemDTO();
