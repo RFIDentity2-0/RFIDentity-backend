@@ -23,11 +23,9 @@ public class ExcelFileChangeListener implements FileChangeListener {
                     .filter(f -> f.getFile().getName().endsWith(".xlsx"))
                     .forEach(f -> {
                         log.info("Detected change in file: " + f.getFile().getAbsolutePath());
-
                         try {
                             sapItemService.deleteAll();
                             excelFileProcessor.process(f.getFile().toPath());
-
                             log.info("Data has been successfully updated from file: " + f.getFile().getAbsolutePath());
                         } catch (Exception e) {
                             log.error("Error processing file: " + f.getFile().getAbsolutePath(), e);
