@@ -24,22 +24,6 @@ public class SapItemServiceImpl implements SapItemService {
 
     private final InventoryMapper inventoryMapper = InventoryMapper.INSTANCE;
 
-    @Override
-    public List<String> getUniqueRooms(Long inventoryId) {
-
-        Inventory inventory = inventoryRepo.findById(inventoryId)
-                .orElseThrow(() -> new RuntimeException("Inventory not found"));
-
-        List<SapItem> allItems = sapItemRepo.findAllByInventoryId(inventory);
-
-        Set<String> uniqueRooms = allItems.stream()
-                .map(SapItem::getRoom)
-                .filter(room -> room != null && !room.isEmpty())
-                .collect(Collectors.toSet());
-
-        return uniqueRooms.stream().collect(Collectors.toList());
-    }
-
     public String updateSapItem(String assetId, Long inventoryId, DiffSapItemDTO diffSapItemDTO) {
         Inventory inventory = inventoryRepo.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));

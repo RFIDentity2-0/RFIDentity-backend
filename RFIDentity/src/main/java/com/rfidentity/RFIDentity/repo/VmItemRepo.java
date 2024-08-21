@@ -14,4 +14,5 @@ public interface VmItemRepo extends JpaRepository<VmItem, Long> {
     List<VmItem> findByInventoryId(Inventory inventory, Pageable pageable);
     VmItem findByInventoryIdAndAssetId(Inventory inventory, String assetId);
     Optional<VmItem> findByAssetIdAndInventoryId(String assetId, Inventory inventoryId);
+    List<VmItem> findAllByInventoryId(Inventory inventory);
 }

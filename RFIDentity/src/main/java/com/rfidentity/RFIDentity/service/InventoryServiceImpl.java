@@ -3,6 +3,7 @@ package com.rfidentity.RFIDentity.service;
 import com.rfidentity.RFIDentity.api.dto.DashboardDTO;
 import com.rfidentity.RFIDentity.api.dto.DiffDTO;
 import com.rfidentity.RFIDentity.api.dto.InventoryDTO;
+import com.rfidentity.RFIDentity.api.dto.RoomItemDTO;
 import com.rfidentity.RFIDentity.api.dto.mapper.InventoryMapper;
 import com.rfidentity.RFIDentity.model.Inventory;
 import com.rfidentity.RFIDentity.model.SapItem;
@@ -126,5 +127,60 @@ public class InventoryServiceImpl implements InventoryService {
         return inventoryRepo.findFirstByOrderByIdDesc().stream()
                 .map(inventoryMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Object> getUniqueRooms(Long inventoryId, Pageable pageable) {
+
+        Inventory inventory = inventoryRepo.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        List<SapItem> sapItems = sapItemRepo.findAllByInventoryId(inventory);
+        List<VmItem> vmItems = vmItemRepo.findAllByInventoryId(inventory);
+
+        Map<String, List<RoomItemDTO>> roomItemsMap = new HashMap<>();
+
+        for (SapItem sapItem : sapItems) {
+            String room = sapItem.getRoom() != null ? sapItem.getRoom() : "Unknown Room";
+            String assetId = sapItem.getAssetId();
+            String description = sapItem.getDescription();
+
+            RoomItemDTO roomItemDTO = new RoomItemDTO(assetId, description, null);
+
+            roomItemsMap.computeIfAbsent(room, k -> new ArrayList<>()).add(roomItemDTO);
+        }
+
+        for (VmItem vmItem : vmItems) {
+            String room = vmItem.getLocation() != null ? vmItem.getLocation() : "Unknown Room";
+            String assetId = vmItem.getAssetId();
+            String status = vmItem.getStatus();
+
+            RoomItemDTO roomItemDTO = new RoomItemDTO(assetId, null, status);
+
+            roomItemsMap.computeIfAbsent(room, k -> new ArrayList<>()).add(roomItemDTO);
+        }
+
+        roomItemsMap.forEach((room, items) -> {
+            List<RoomItemDTO> sortedItems = items.stream()
+                    .sorted(Comparator.comparing(RoomItemDTO::getAssetId))
+                    .limit(10)
+                    .collect(Collectors.toList());
+            roomItemsMap.put(room, sortedItems);
+        });
+
+        List<Map.Entry<String, List<RoomItemDTO>>> roomItemsList = new ArrayList<>(roomItemsMap.entrySet());
+
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), roomItemsList.size());
+
+        List<Map.Entry<String, List<RoomItemDTO>>> paginatedRooms = roomItemsList.subList(start, end);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("totalElements", roomItemsList.size());
+        response.put("totalPages", (int) Math.ceil((double) roomItemsList.size() / pageable.getPageSize()));
+        response.put("content", paginatedRooms);
+
+        return response;
     }
 }
