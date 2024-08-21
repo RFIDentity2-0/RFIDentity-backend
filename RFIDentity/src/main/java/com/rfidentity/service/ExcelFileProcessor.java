@@ -45,6 +45,26 @@ public class ExcelFileProcessor implements FileProcessor {
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        try {
+            Map<Integer, List<String>> data = instance.readExcel(new File("src/main/resources/SAP_20240414.xlsx"));
+            data.forEach((rowNum, rowData) -> {
+                SapItem sapItem = new SapItem();
+
+                sapItem.setAssetNo(Long.parseLong(rowData.get(0)));
+                sapItem.setSubNo(Long.parseLong(rowData.get(1)));
+
+                sapItem.setDescription(rowData.get(3));
+                sapItem.setRoom(rowData.get(4));
+                sapItem.setAssetId(rowData.get(5));
+                sapItemService.save(sapItem);
+            });
+
+
+
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
