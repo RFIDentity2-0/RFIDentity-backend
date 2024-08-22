@@ -20,19 +20,17 @@ public class DataInitializer {
 
     @PostConstruct
     public void initializeData() {
-        if (sapItemService.isDatabaseEmpty()) {
-            log.info("The database is empty, starting to load data from the Excel file.");
+        log.info("Starting data loading from Excel file.");
 
-            try {
-                var filePath = Paths.get("src/main/resources/SAP_20240414.xlsx");
-                excelFileProcessor.process(filePath);
-
-                log.info("Data has been successfully loaded into the database.");
-            } catch (Exception e) {
-                log.error("Error processing file: " + e.getMessage(), e);
-            }
-        } else {
-            log.info("The database contains data, no need to load from the Excel file.");
+        try {
+            var filePath = Paths.get("src/main/resources/SAPVM/VM_20240414");
+            var filePath2 = Paths.get("src/main/resources/SAPVM/SAP_20240414");
+            excelFileProcessor.process(filePath);
+            excelFileProcessor.process(filePath2);
+            log.info("Data has been successfully loaded into the database.");
+        } catch (Exception e) {
+            log.error("Error processing file: " + e.getMessage(), e);
         }
     }
 }
+
