@@ -17,8 +17,6 @@ public interface SapItemRepo extends JpaRepository<SapItem, Long> {
     SapItem findByInventoryIdAndAssetId(Inventory inventory, String assetId);
     Optional<SapItem> findByAssetIdAndInventoryId(String assetId, Inventory inventoryId);
     List<SapItem> findAllByInventoryId(Inventory inventory);
-
-    @Query("SELECT r FROM SapItem r WHERE r.inventoryId = :inventoryId")
-    List<SapItem> findRoomsByinventoryId(@Param("inventoryId") Inventory inventoryId);
+    List<SapItem> findAllByInventoryIdAndRoomIgnoreCase(Inventory inventory, String room);
 
 }

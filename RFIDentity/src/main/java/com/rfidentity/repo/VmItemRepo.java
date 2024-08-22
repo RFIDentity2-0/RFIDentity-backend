@@ -18,7 +18,5 @@ public interface VmItemRepo extends JpaRepository<VmItem, Long> {
     VmItem findByInventoryIdAndAssetId(Inventory inventory, String assetId);
     Optional<VmItem> findByAssetIdAndInventoryId(String assetId, Inventory inventoryId);
     List<VmItem> findAllByInventoryId(Inventory inventory);
-
-    @Query("SELECT r FROM VmItem r WHERE r.inventoryId = :inventoryId")
-    List<VmItem> findRoomsByinventoryId(@Param("inventoryId") Inventory inventoryId);
+    List<VmItem> findAllByInventoryIdAndRoomIgnoreCase(Inventory inventory, String room);
 }

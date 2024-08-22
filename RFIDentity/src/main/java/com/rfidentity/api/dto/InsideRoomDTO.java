@@ -9,5 +9,6 @@ public class InsideRoomDTO {
     private String hardwareType;
     private String type;
     private String status;
+    private String room;
 
 }

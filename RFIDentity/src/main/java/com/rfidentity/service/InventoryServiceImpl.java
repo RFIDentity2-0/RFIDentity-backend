@@ -163,7 +163,6 @@ public class InventoryServiceImpl implements InventoryService {
 
         for (SapItem sapItem : sapItems) {
             String assetId = sapItem.getAssetId();
-            InventoryItem inventoryItem = inventoryItemMap.get(sapItem.getAssetId());
             String status = assetIdToStatusMap.getOrDefault(assetId, "Unknown Status");
             VmItem vmItem = vmItemMap.get(assetId);
 
@@ -211,23 +210,23 @@ public class InventoryServiceImpl implements InventoryService {
         Inventory inventory = inventoryRepo.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
-        List<SapItem> sapRooms = sapItemRepo.findAllByInventoryId(inventory);
-        List<InventoryItem> inventoryItems = inventoryItemRepo.findAllByInventoryId(inventory);
+        List<SapItem> sapInventory = sapItemRepo.findAllByInventoryIdAndRoomIgnoreCase(inventory, room);
         List<InventoryItemOutcome> inventoryItemOutcomes = inventoryItemOutcomeRepo.findAllByInventoryItemIdInventoryId(inventory);
-        List<VmItem> vmRooms = vmItemRepo.findAllByInventoryId(inventory);
+        List<VmItem> vmInventory = vmItemRepo.findAllByInventoryIdAndRoomIgnoreCase(inventory, room);
 
-        boolean isRoomInSap = sapRooms.stream()
-                .anyMatch(sapRoom -> sapRoom.getRoom() != null && sapRoom.getRoom().equalsIgnoreCase(room));
+        List<SapItem> filteredSapInventory = sapInventory.stream()
+                .filter(sapItem -> sapItem.getRoom() != null && sapItem.getRoom().equalsIgnoreCase(room))
+                .collect(Collectors.toList());
 
-        boolean isRoomInVm = vmRooms.stream()
-                .anyMatch(vmRoom -> vmRoom.getRoom() != null && vmRoom.getRoom().equalsIgnoreCase(room));
+        List<VmItem> filteredVmInventory = vmInventory.stream()
+                .filter(vmItem -> vmItem.getRoom() != null && vmItem.getRoom().equalsIgnoreCase(room))
+                .collect(Collectors.toList());
 
 
-
-        Map<String, SapItem> sapItemMap = sapRooms.stream()
+        Map<String, SapItem> sapItemMap = filteredSapInventory.stream()
                 .collect(Collectors.toMap(SapItem::getAssetId, Function.identity()));
 
-        Map<String, VmItem> vmItemMap = vmRooms.stream()
+        Map<String, VmItem> vmItemMap = filteredVmInventory.stream()
                 .collect(Collectors.toMap(VmItem::getAssetId, Function.identity()));
 
         Map<String, InventoryItemOutcome> inventoryItemOutcomesMap = inventoryItemOutcomes.stream()
@@ -243,22 +242,22 @@ public class InventoryServiceImpl implements InventoryService {
 
         for (String assetId : allAssetIds) {
 
-            if(isRoomInSap || isRoomInVm){
-                SapItem sapItem = sapItemMap.get(assetId);
-                VmItem vmItem = vmItemMap.get(assetId);
-                InventoryItemOutcome inventoryItemOutcome = inventoryItemOutcomesMap.get(assetId);
+            SapItem sapItem = sapItemMap.get(assetId);
+            VmItem vmItem = vmItemMap.get(assetId);
+            InventoryItemOutcome inventoryItemOutcome = inventoryItemOutcomesMap.get(assetId);
 
-                InsideRoomDTO dto = new InsideRoomDTO();
-                dto.setAssetId(assetId);
-                dto.setDescription(sapItem != null ? sapItem.getDescription() : null);
-                dto.setHardwareType(vmItem != null ? vmItem.getHardwareType() : null);
-                dto.setType(vmItem != null ? vmItem.getType() : null);
-                dto.setStatus(inventoryItemOutcome != null ? inventoryItemOutcome.getStatus() : null);
+            InsideRoomDTO dto = new InsideRoomDTO();
+            dto.setAssetId(assetId);
+            dto.setDescription(sapItem != null ? sapItem.getDescription() : null);
+            dto.setHardwareType(vmItem != null ? vmItem.getHardwareType() : null);
+            dto.setType(vmItem != null ? vmItem.getType() : null);
+            dto.setStatus(inventoryItemOutcome != null ? inventoryItemOutcome.getStatus() : null);
 
-                roomDTO.add(dto);
-            }
+            roomDTO.add(dto);
 
         }
+
+        roomDTO.sort(Comparator.comparing(InsideRoomDTO::getAssetId));
 
         return new PageImpl<>(roomDTO, pageable, roomDTO.size());
     }
