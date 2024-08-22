@@ -1,7 +1,10 @@
 package com.rfidentity.api.controller;
 
+import com.rfidentity.api.dto.InsideRoomDTO;
 import com.rfidentity.api.dto.InventoryDTO;
 import com.rfidentity.api.dto.RoomItemDTO;
+import com.rfidentity.model.Inventory;
+import com.rfidentity.model.SapItem;
 import com.rfidentity.service.InventoryService;
 import com.rfidentity.api.dto.DashboardDTO;
 import com.rfidentity.api.dto.DiffDTO;
@@ -27,11 +30,11 @@ public class InventoryController {
 
     @GetMapping("/getUniqueRooms")
     public ResponseEntity<Map<String, Object>> getUniqueRooms(
-            @RequestParam Long inventoryId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size) {
+            @RequestParam(defaultValue = "8") int size,
+            @RequestParam Long inventoryId) {
 
-        Page<Map<String, List<Map<String, String>>>> resultPage = inventoryService.getUniqueRooms(inventoryId, page, size);
+        Page<Map<String, Object>> resultPage = inventoryService.getUniqueRooms(inventoryId, page, size);
 
         Map<String, Object> response = new HashMap<>();
         response.put("content", resultPage.getContent());
@@ -72,5 +75,21 @@ public class InventoryController {
         return new ResponseEntity<>(responseInventory, HttpStatus.OK);
     }
 
+    @GetMapping("/getAssetsForRoom/{inventoryId}/{room}")
+    public ResponseEntity<Map<String, Object>> getAssetsForRoom(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @PathVariable(required = false) Long inventoryId,
+            @PathVariable String room){
+
+        Page<InsideRoomDTO> pageResult = inventoryService.getAssetForRooms(page, size, inventoryId, room);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", pageResult.getContent());
+        response.put("totalElements", pageResult.getTotalElements());
+        response.put("totalPages", pageResult.getTotalPages());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }

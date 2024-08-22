@@ -17,9 +17,4 @@ public class InventoryItemController {
     @Autowired
     private InventoryItemService inventoryItemService;
 
-    @GetMapping
-    public List<InventoryItemDTO> getAllInventoryItem() {
-        return inventoryItemService.getAllInventoryItem();
-    }
-
 }

@@ -1,5 +1,6 @@
 package com.rfidentity.service;
 
+import com.rfidentity.api.dto.InsideRoomDTO;
 import com.rfidentity.api.dto.InventoryDTO;
 import com.rfidentity.api.dto.DashboardDTO;
 import com.rfidentity.api.dto.DiffDTO;
@@ -14,5 +15,6 @@ public interface InventoryService {
     Page<DashboardDTO> getAllDashboardItems(int page, int size, Long inventoryId);
     DiffDTO getDiffItems(Long inventoryId, String assetId);
     List<InventoryDTO> getAllInventory();
-    Page<Map<String, List<Map<String, String>>>> getUniqueRooms(Long inventoryId, int page, int size);
+    Page<Map<String, Object>> getUniqueRooms(Long inventoryId, int page, int size);
+    Page<InsideRoomDTO> getAssetForRooms(int page, int size, Long inventoryId, String room);
 }

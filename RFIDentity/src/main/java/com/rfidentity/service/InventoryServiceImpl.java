@@ -1,7 +1,12 @@
 package com.rfidentity.service;
 
+import com.rfidentity.api.dto.InsideRoomDTO;
 import com.rfidentity.api.dto.InventoryDTO;
 import com.rfidentity.model.Inventory;
+import com.rfidentity.model.InventoryItem;
+import com.rfidentity.model.InventoryItemOutcome;
+import com.rfidentity.repo.InventoryItemOutcomeRepo;
+import com.rfidentity.repo.InventoryItemRepo;
 import com.rfidentity.repo.InventoryRepo;
 import com.rfidentity.api.dto.DashboardDTO;
 import com.rfidentity.api.dto.DiffDTO;
@@ -34,6 +39,12 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
     private InventoryRepo inventoryRepo;
+
+    @Autowired
+    private InventoryItemRepo inventoryItemRepo;
+
+    @Autowired
+    private InventoryItemOutcomeRepo inventoryItemOutcomeRepo;
 
     private final InventoryMapper inventoryMapper = InventoryMapper.INSTANCE;
 
@@ -128,28 +139,34 @@ public class InventoryServiceImpl implements InventoryService {
                 .map(inventoryMapper::toDTO)
                 .collect(Collectors.toList());
     }
-
     @Override
-    public Page<Map<String, List<Map<String, String>>>> getUniqueRooms(Long inventoryId, int page, int size) {
+    public Page<Map<String, Object>> getUniqueRooms(Long inventoryId, int page, int size) {
         Inventory inventory = inventoryRepo.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
-        // Pobierz dane z obu repozytoriów
         List<SapItem> sapItems = sapItemRepo.findAllByInventoryId(inventory);
+        List<InventoryItem> inventoryItems = inventoryItemRepo.findAllByInventoryId(inventory);
+        List<InventoryItemOutcome> inventoryItemOutcomes = inventoryItemOutcomeRepo.findAllByInventoryItemIdInventoryId(inventory);
         List<VmItem> vmItems = vmItemRepo.findAllByInventoryId(inventory);
 
-        // Utwórz mapę do przechowywania połączonych danych według pokoju
-        Map<String, List<Map<String, String>>> roomMap = new HashMap<>();
+        Map<String, InventoryItem> inventoryItemMap = inventoryItems.stream()
+                .collect(Collectors.toMap(InventoryItem::getSapItemId, Function.identity()));
 
-        // Utwórz mapę do szybkiego dostępu do VmItem na podstawie assetId
+        Map<String, String> assetIdToStatusMap = inventoryItemOutcomes.stream()
+                .collect(Collectors.toMap(InventoryItemOutcome::getAssetId, InventoryItemOutcome::getStatus));
+
         Map<String, VmItem> vmItemMap = vmItems.stream()
                 .collect(Collectors.toMap(VmItem::getAssetId, Function.identity()));
 
+
+        Map<String, List<Map<String, String>>> roomMap = new HashMap<>();
+
         for (SapItem sapItem : sapItems) {
             String assetId = sapItem.getAssetId();
+            InventoryItem inventoryItem = inventoryItemMap.get(sapItem.getAssetId());
+            String status = assetIdToStatusMap.getOrDefault(assetId, "Unknown Status");
             VmItem vmItem = vmItemMap.get(assetId);
 
-            // Określ wartość room na podstawie dostępnych danych
             String room = (sapItem.getRoom() != null && !sapItem.getRoom().isEmpty())
                     ? sapItem.getRoom()
                     : (vmItem != null && vmItem.getRoom() != null && !vmItem.getRoom().isEmpty())
@@ -159,32 +176,90 @@ public class InventoryServiceImpl implements InventoryService {
             Map<String, String> itemDetails = new HashMap<>();
             itemDetails.put("assetId", assetId);
             itemDetails.put("description", sapItem.getDescription());
-            itemDetails.put("status", vmItem != null ? vmItem.getStatus() : null);
+            itemDetails.put("status", status);
 
-            // Dodaj do odpowiedniej listy pokoju
             roomMap.computeIfAbsent(room, k -> new ArrayList<>()).add(itemDetails);
         }
 
-        // Logika paginacji
-        List<Map<String, List<Map<String, String>>>> paginatedRooms = roomMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey()) // Sortuj pokoje alfabetycznie
+        List<Map<String, Object>> paginatedRooms = roomMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
                 .skip(page * size)
                 .limit(size)
                 .map(entry -> {
-                    Map<String, List<Map<String, String>>> singleRoom = new HashMap<>();
-                    singleRoom.put(entry.getKey(), entry.getValue().stream()
-                            .sorted(Comparator.comparing(item -> item.get("assetId"))) // Sortuj elementy według assetId
-                            .limit(10) // Ogranicz do pierwszych 10 elementów na pokój
+                    Map<String, Object> singleRoom = new HashMap<>();
+                    singleRoom.put("Room", entry.getKey());
+                    singleRoom.put("Items", entry.getValue().stream()
+                            .sorted(Comparator.comparing(item -> item.get("assetId")))
+                            .limit(10)
                             .collect(Collectors.toList()));
                     return singleRoom;
                 })
                 .collect(Collectors.toList());
 
-        // Utwórz odpowiedź w formacie Page
         int totalRooms = roomMap.size();
-        Page<Map<String, List<Map<String, String>>>> pagedResult = new PageImpl<>(
+        Page<Map<String, Object>> pagedResult = new PageImpl<>(
                 paginatedRooms, PageRequest.of(page, size), totalRooms);
 
         return pagedResult;
+    }
+
+
+    @Override
+    public Page<InsideRoomDTO> getAssetForRooms(int page, int size, Long inventoryId, String room){
+        Pageable pageable = PageRequest.of(page, size);
+
+        Inventory inventory = inventoryRepo.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        List<SapItem> sapRooms = sapItemRepo.findAllByInventoryId(inventory);
+        List<InventoryItem> inventoryItems = inventoryItemRepo.findAllByInventoryId(inventory);
+        List<InventoryItemOutcome> inventoryItemOutcomes = inventoryItemOutcomeRepo.findAllByInventoryItemIdInventoryId(inventory);
+        List<VmItem> vmRooms = vmItemRepo.findAllByInventoryId(inventory);
+
+        boolean isRoomInSap = sapRooms.stream()
+                .anyMatch(sapRoom -> sapRoom.getRoom() != null && sapRoom.getRoom().equalsIgnoreCase(room));
+
+        boolean isRoomInVm = vmRooms.stream()
+                .anyMatch(vmRoom -> vmRoom.getRoom() != null && vmRoom.getRoom().equalsIgnoreCase(room));
+
+
+
+        Map<String, SapItem> sapItemMap = sapRooms.stream()
+                .collect(Collectors.toMap(SapItem::getAssetId, Function.identity()));
+
+        Map<String, VmItem> vmItemMap = vmRooms.stream()
+                .collect(Collectors.toMap(VmItem::getAssetId, Function.identity()));
+
+        Map<String, InventoryItemOutcome> inventoryItemOutcomesMap = inventoryItemOutcomes.stream()
+                .collect(Collectors.toMap(InventoryItemOutcome::getAssetId, Function.identity()));
+
+        Set<String> allAssetIds = new HashSet<>();
+        allAssetIds.addAll(sapItemMap.keySet());
+        allAssetIds.addAll(vmItemMap.keySet());
+        allAssetIds.addAll(inventoryItemOutcomesMap.keySet());
+
+        List<InsideRoomDTO> roomDTO = new ArrayList<>();
+
+
+        for (String assetId : allAssetIds) {
+
+            if(isRoomInSap || isRoomInVm){
+                SapItem sapItem = sapItemMap.get(assetId);
+                VmItem vmItem = vmItemMap.get(assetId);
+                InventoryItemOutcome inventoryItemOutcome = inventoryItemOutcomesMap.get(assetId);
+
+                InsideRoomDTO dto = new InsideRoomDTO();
+                dto.setAssetId(assetId);
+                dto.setDescription(sapItem != null ? sapItem.getDescription() : null);
+                dto.setHardwareType(vmItem != null ? vmItem.getHardwareType() : null);
+                dto.setType(vmItem != null ? vmItem.getType() : null);
+                dto.setStatus(inventoryItemOutcome != null ? inventoryItemOutcome.getStatus() : null);
+
+                roomDTO.add(dto);
+            }
+
+        }
+
+        return new PageImpl<>(roomDTO, pageable, roomDTO.size());
     }
 }
