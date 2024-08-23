@@ -30,10 +30,10 @@ public class DirectoryWatcherConfig {
                 properties.daemon(),
                 Duration.ofMinutes(properties.pollInterval()),
                 Duration.ofMinutes(properties.quietPeriod()));
-        fileSystemWatcher.addSourceDirectory(new File(properties.sapdirectory()).toPath().toFile());
-        fileSystemWatcher.addSourceDirectory(new File(properties.vmdirectory()).toPath().toFile());
+        fileSystemWatcher.addSourceDirectory(Path.of(properties.sapdirectory()).toFile());
+        fileSystemWatcher.addSourceDirectory(Path.of(properties.vmdirectory()).toFile());
         fileSystemWatcher.addListener(
-                new ExcelFileChangeListener(excelFileProcessor, sapItemService));
+                new ExcelFileChangeListener(excelFileProcessor));
         fileSystemWatcher.setTriggerFilter(
                 f -> f.toPath().endsWith(".xlsx"));
         fileSystemWatcher.start();

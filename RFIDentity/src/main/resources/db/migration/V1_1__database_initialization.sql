@@ -25,7 +25,7 @@ CREATE TABLE inventory_item_outcome (
 
 CREATE TABLE sap_item (
                           id BIGSERIAL PRIMARY KEY,
-                          inventory_id BIGINT,
+                          inventory_id BIGINT NOT NULL ,
                           asset_no BIGINT,
                           sub_no BIGINT,
                           capitalized_date DATE,

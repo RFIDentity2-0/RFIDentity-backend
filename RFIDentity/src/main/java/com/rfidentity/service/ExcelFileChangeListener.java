@@ -10,11 +10,16 @@ import java.util.Set;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
+
 public class ExcelFileChangeListener implements FileChangeListener {
 
     private final ExcelFileProcessor excelFileProcessor;
-    private final SapItemService sapItemService;
+
+    public ExcelFileChangeListener(ExcelFileProcessor excelFileProcessor) {
+        this.excelFileProcessor = excelFileProcessor;
+    }
+
+
 
     @Override
     public void onChange(Set<ChangedFiles> changeSet) {

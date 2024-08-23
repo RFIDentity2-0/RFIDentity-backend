@@ -23,7 +23,7 @@ public class SapItem {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inventory_id", nullable = true)
+    @JoinColumn(name = "inventory_id", nullable = false)
     private Inventory inventoryId;
 
     @Column(name = "asset_no")
@@ -49,4 +49,6 @@ public class SapItem {
 
     public void setCellValue(String cellValue) {
     }
+
+
 }

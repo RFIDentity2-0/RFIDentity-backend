@@ -8,4 +8,6 @@ import java.util.List;
 public interface InventoryService {
     List<InventoryDTO> getAllInventory();
     void addInventory(Inventory inventory);
+
+    void save(Inventory inventory);
 }
