@@ -1,5 +1,8 @@
 package com.rfidentity.api.controller;
 
+import com.rfidentity.api.dto.ApiResponse;
+import com.rfidentity.api.dto.CommentDTO;
+import com.rfidentity.api.dto.DiffSapItemDTO;
 import com.rfidentity.api.dto.InsideRoomDTO;
 import com.rfidentity.api.dto.InventoryDTO;
 import com.rfidentity.api.dto.RoomItemDTO;
@@ -92,4 +95,16 @@ public class InventoryController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PutMapping("/updateCommentForAssets/{inventoryId}/{assetId}")
+    public ResponseEntity<ApiResponse> updateCommentForAssets(
+            @PathVariable Long inventoryId,
+            @PathVariable String assetId,
+            @RequestBody CommentDTO commentDTO){
+        try{
+            String responseMessage = inventoryService.updateCommentForAssets(inventoryId, assetId, commentDTO);
+            return new ResponseEntity<>(new ApiResponse(responseMessage),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(new ApiResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

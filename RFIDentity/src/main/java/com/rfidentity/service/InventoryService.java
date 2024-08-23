@@ -1,5 +1,6 @@
 package com.rfidentity.service;
 
+import com.rfidentity.api.dto.CommentDTO;
 import com.rfidentity.api.dto.InsideRoomDTO;
 import com.rfidentity.api.dto.InventoryDTO;
 import com.rfidentity.api.dto.DashboardDTO;
@@ -17,4 +18,8 @@ public interface InventoryService {
     List<InventoryDTO> getAllInventory();
     Page<Map<String, Object>> getUniqueRooms(Long inventoryId, int page, int size);
     Page<InsideRoomDTO> getAssetForRooms(int page, int size, Long inventoryId, String room);
+
+    String updateCommentForAssets(Long inventoryId, String assetId, CommentDTO commentDTO);
+
+
 }

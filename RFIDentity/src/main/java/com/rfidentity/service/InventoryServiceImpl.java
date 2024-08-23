@@ -1,5 +1,6 @@
 package com.rfidentity.service;
 
+import com.rfidentity.api.dto.CommentDTO;
 import com.rfidentity.api.dto.InsideRoomDTO;
 import com.rfidentity.api.dto.InventoryDTO;
 import com.rfidentity.model.Inventory;
@@ -145,12 +146,8 @@ public class InventoryServiceImpl implements InventoryService {
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
         List<SapItem> sapItems = sapItemRepo.findAllByInventoryId(inventory);
-        List<InventoryItem> inventoryItems = inventoryItemRepo.findAllByInventoryId(inventory);
         List<InventoryItemOutcome> inventoryItemOutcomes = inventoryItemOutcomeRepo.findAllByInventoryItemIdInventoryId(inventory);
         List<VmItem> vmItems = vmItemRepo.findAllByInventoryId(inventory);
-
-        Map<String, InventoryItem> inventoryItemMap = inventoryItems.stream()
-                .collect(Collectors.toMap(InventoryItem::getSapItemId, Function.identity()));
 
         Map<String, String> assetIdToStatusMap = inventoryItemOutcomes.stream()
                 .collect(Collectors.toMap(InventoryItemOutcome::getAssetId, InventoryItemOutcome::getStatus));
@@ -252,6 +249,7 @@ public class InventoryServiceImpl implements InventoryService {
             dto.setHardwareType(vmItem != null ? vmItem.getHardwareType() : null);
             dto.setType(vmItem != null ? vmItem.getType() : null);
             dto.setStatus(inventoryItemOutcome != null ? inventoryItemOutcome.getStatus() : null);
+            dto.setComment(inventoryItemOutcome != null ? inventoryItemOutcome.getComment() : null);
 
             roomDTO.add(dto);
 
@@ -260,5 +258,32 @@ public class InventoryServiceImpl implements InventoryService {
         roomDTO.sort(Comparator.comparing(InsideRoomDTO::getAssetId));
 
         return new PageImpl<>(roomDTO, pageable, roomDTO.size());
+    }
+
+    @Override
+    public String updateCommentForAssets(Long inventoryId, String assetId, CommentDTO commentDTO){
+        Inventory inventory = inventoryRepo.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        List<InventoryItem> inventoryItems = inventoryItemRepo.findByInventoryId(inventory);
+
+        InventoryItemOutcome inventoryItemOutcome = null;
+
+        for (InventoryItem inventoryItem : inventoryItems) {
+            inventoryItemOutcome = inventoryItemOutcomeRepo.findByInventoryItemIdAndAssetId(inventoryItem, assetId);
+            if (inventoryItemOutcome != null) {
+                break;
+            }
+        }
+
+        if (inventoryItemOutcome == null) {
+            throw new RuntimeException("Asset not found in inventory");
+        }
+
+        inventoryMapper.updateCommentDTO(commentDTO, inventoryItemOutcome);
+
+        inventoryItemOutcomeRepo.save(inventoryItemOutcome);
+
+        return "Comment updated successfully";
     }
 }

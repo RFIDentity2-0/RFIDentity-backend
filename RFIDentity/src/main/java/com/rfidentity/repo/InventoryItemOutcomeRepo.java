@@ -13,4 +13,6 @@ import java.util.List;
 public interface InventoryItemOutcomeRepo extends JpaRepository<InventoryItemOutcome, Long> {
     List<InventoryItemOutcome> findAllByInventoryItemIdInventoryId(Inventory inventoryId);
 
+    InventoryItemOutcome findByInventoryItemIdAndAssetId(InventoryItem inventoryItem, String assetId);
+
 }
