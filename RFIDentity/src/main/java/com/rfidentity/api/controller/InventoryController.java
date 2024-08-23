@@ -5,12 +5,14 @@ import com.rfidentity.api.dto.CommentDTO;
 import com.rfidentity.api.dto.DiffSapItemDTO;
 import com.rfidentity.api.dto.InsideRoomDTO;
 import com.rfidentity.api.dto.InventoryDTO;
+import com.rfidentity.api.dto.MobileRoomsDTO;
 import com.rfidentity.api.dto.RoomItemDTO;
 import com.rfidentity.model.Inventory;
 import com.rfidentity.model.SapItem;
 import com.rfidentity.service.InventoryService;
 import com.rfidentity.api.dto.DashboardDTO;
 import com.rfidentity.api.dto.DiffDTO;
+import com.rfidentity.service.MobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -108,5 +110,4 @@ public class InventoryController {
         }
     }
 
-    @PostMapping("/")
 }
