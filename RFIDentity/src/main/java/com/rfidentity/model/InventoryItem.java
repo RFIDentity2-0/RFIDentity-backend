@@ -36,5 +36,4 @@ public class InventoryItem {
 
     @Column(name = "vm_item_id")
     private String vmItemId;
-
 }

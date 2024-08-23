@@ -4,12 +4,12 @@ import com.rfidentity.api.dto.VmItemDTO;
 import com.rfidentity.model.SapItem;
 import com.rfidentity.model.VmItem;
 import com.rfidentity.repo.VmItemRepo;
+import com.rfidentity.api.dto.DiffVmItemDTO;
+import com.rfidentity.api.dto.mapper.InventoryMapper;
+import com.rfidentity.model.Inventory;
+import com.rfidentity.repo.InventoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class VmItemServiceImpl implements VmItemService {
@@ -20,35 +20,22 @@ public class VmItemServiceImpl implements VmItemService {
     @Autowired
     private VmItemRepo vmItemRepo;
 
-    @Override
-    public List<VmItemDTO> getAllVmItem() {
+    @Autowired
+    private InventoryRepo inventoryRepo;
 
-        return StreamSupport.stream(vmItemRepo.findAll().spliterator(), false)
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-    private VmItemDTO convertToDTO(VmItem vmItem) {
-        VmItemDTO dto = new VmItemDTO();
-        dto.setId(vmItem.getId());
-        dto.setSystemName(vmItem.getSystemName());
-        dto.setDnsName(vmItem.getDnsName());
-        dto.setType(vmItem.getType());
-        dto.setManufacturer(vmItem.getManufacturer());
-        dto.setHardwareType(vmItem.getHardwareType());
-        dto.setSerialNo(vmItem.getSerialNo());
-        dto.setDateOfInstallation(vmItem.getDateOfInstallation());
-        dto.setStatus(vmItem.getStatus());
-        dto.setDepartment(vmItem.getDepartment());
-        dto.setPersonId(vmItem.getPersonId());
-        dto.setLastName(vmItem.getLastName());
-        dto.setFirstName(vmItem.getFirstName());
-        dto.setLocation(vmItem.getLocation());
-        dto.setBuilding(vmItem.getBuilding());
-        dto.setRoom(vmItem.getRoom());
-        dto.setAssetId(vmItem.getAssetId());
+    private final InventoryMapper inventoryMapper = InventoryMapper.INSTANCE;
 
-        dto.setInventoryId(vmItem.getInventoryId().getId());
+    public String updateVmItem(String assetId, Long inventoryId, DiffVmItemDTO diffVmItemDTO) {
+        Inventory inventory = inventoryRepo.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
-        return dto;
+        VmItem vmItem = vmItemRepo.findByAssetIdAndInventoryId(assetId, inventory)
+                .orElseThrow(() -> new RuntimeException("VmItem not found"));
+
+        inventoryMapper.updateDiffVmItemFromDto(diffVmItemDTO, vmItem);
+
+        vmItemRepo.save(vmItem);
+
+        return "VmItem updated successfully";
     }
 }
