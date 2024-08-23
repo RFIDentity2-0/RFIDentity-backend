@@ -23,7 +23,7 @@ public class VmItem {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inventory_id", nullable = true)
+    @JoinColumn(name = "inventory_id", nullable = false)
     private Inventory inventoryId;
 
     @Column(name = "system_name")

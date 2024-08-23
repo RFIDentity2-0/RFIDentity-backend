@@ -12,7 +12,7 @@ class SAPFileProcessorTest {
 
     @Test
     void readExcel() {
-        VMFileProcessor instance = new VMFileProcessor();
+        SAPFileProcessor instance = new SAPFileProcessor();
         File f = new File(".");
         String absolutePath = f.getAbsolutePath();
         try {

@@ -8,6 +8,6 @@ import java.util.List;
 public interface SapItemService {
     List<SapItemDTO> getAllSapItem();
     void save(SapItem sapItem);
-
+    boolean isDatabaseEmpty();
 
 }

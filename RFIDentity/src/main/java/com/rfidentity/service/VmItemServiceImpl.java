@@ -1,7 +1,6 @@
 package com.rfidentity.service;
 
 import com.rfidentity.api.dto.VmItemDTO;
-import com.rfidentity.model.SapItem;
 import com.rfidentity.model.VmItem;
 import com.rfidentity.repo.VmItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +23,6 @@ public class VmItemServiceImpl implements VmItemService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public void save(VmItem vmItem) {
-        vmItemRepo.save(vmItem);
-    }
-
     private VmItemDTO convertToDTO(VmItem vmItem) {
         VmItemDTO dto = new VmItemDTO();
         dto.setId(vmItem.getId());

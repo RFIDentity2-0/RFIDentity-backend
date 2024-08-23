@@ -29,6 +29,11 @@ public class SapItemServiceImpl implements SapItemService {
         sapItemRepo.save(sapItem);
     }
 
+    @Override
+    public boolean isDatabaseEmpty() {
+        return sapItemRepo.count() == 0;
+    }
+
 
 
 

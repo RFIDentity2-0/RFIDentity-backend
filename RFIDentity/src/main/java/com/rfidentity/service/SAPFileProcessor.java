@@ -18,12 +18,16 @@ import java.util.stream.Stream;
 
 @Component
 public class SAPFileProcessor {
+
     public Map<Integer, List<String>> readExcel(File file) throws IOException {
         Map<Integer, List<String>> data = new HashMap<>();
+
         try (
                 FileInputStream fis = new FileInputStream(file);
                 ReadableWorkbook wb = new ReadableWorkbook(fis)
             ) {
+
+
             Sheet sheet = wb.getFirstSheet();
 
             try (Stream<Row> rows  = sheet.openStream()) {
@@ -33,9 +37,12 @@ public class SAPFileProcessor {
                         data.put(r.getRowNum(), rowData);
                         AtomicReference<String> column0 = new AtomicReference<>();
                         AtomicReference<String> column1 = new AtomicReference<>();
+                        int cellIdx = 0;
                         r.forEach(cell -> {
+
                             int columnIndex = cell.getColumnIndex();
                             String cellValue = cell.getRawValue();
+
                             if (columnIndex == 0) {
                                 column0.set(cellValue);
                             } else if (columnIndex == 1) {
@@ -50,6 +57,7 @@ public class SAPFileProcessor {
                     });
             }
         }
+
         return data;
     }
 }
