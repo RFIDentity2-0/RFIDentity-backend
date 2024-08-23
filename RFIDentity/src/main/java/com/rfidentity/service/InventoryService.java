@@ -6,6 +6,7 @@ import com.rfidentity.api.dto.InventoryDTO;
 import com.rfidentity.api.dto.DashboardDTO;
 import com.rfidentity.api.dto.DiffDTO;
 import com.rfidentity.api.dto.RoomItemDTO;
+import com.rfidentity.model.Inventory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,8 +17,6 @@ public interface InventoryService {
     Page<DashboardDTO> getAllDashboardItems(int page, int size, Long inventoryId);
     DiffDTO getDiffItems(Long inventoryId, String assetId);
     List<InventoryDTO> getAllInventory();
-
-    void addInventory(Inventory inventory);
 
     void save(Inventory inventory);
 
