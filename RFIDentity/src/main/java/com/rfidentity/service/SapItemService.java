@@ -5,6 +5,6 @@ import com.rfidentity.model.SapItem;
 
 public interface SapItemService {
     void save(SapItem sapItem);
-    boolean isDatabaseEmpty();
     String updateSapItem(String assetId, Long inventoryId, DiffSapItemDTO diffSapItemDTO);
+
 }

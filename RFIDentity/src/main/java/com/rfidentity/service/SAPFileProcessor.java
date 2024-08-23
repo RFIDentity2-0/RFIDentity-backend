@@ -21,15 +21,11 @@ public class SAPFileProcessor {
 
     public Map<Integer, List<String>> readExcel(File file) throws IOException {
         Map<Integer, List<String>> data = new HashMap<>();
-
         try (
                 FileInputStream fis = new FileInputStream(file);
                 ReadableWorkbook wb = new ReadableWorkbook(fis)
             ) {
-
-
             Sheet sheet = wb.getFirstSheet();
-
             try (Stream<Row> rows  = sheet.openStream()) {
                 rows.skip(1)
                     .forEach(r -> {

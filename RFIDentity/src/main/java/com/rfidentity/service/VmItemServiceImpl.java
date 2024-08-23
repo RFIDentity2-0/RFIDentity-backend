@@ -1,5 +1,7 @@
 package com.rfidentity.service;
 
+import com.rfidentity.api.dto.VmItemDTO;
+import com.rfidentity.model.SapItem;
 import com.rfidentity.model.VmItem;
 import com.rfidentity.repo.VmItemRepo;
 import com.rfidentity.api.dto.DiffVmItemDTO;
@@ -11,7 +13,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VmItemServiceImpl implements VmItemService {
-
+    @Override
+    public void save(VmItem vmItem) {
+        vmItemRepo.save(vmItem);
+    }
     @Autowired
     private VmItemRepo vmItemRepo;
 

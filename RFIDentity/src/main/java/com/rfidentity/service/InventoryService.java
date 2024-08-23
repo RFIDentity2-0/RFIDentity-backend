@@ -16,6 +16,11 @@ public interface InventoryService {
     Page<DashboardDTO> getAllDashboardItems(int page, int size, Long inventoryId);
     DiffDTO getDiffItems(Long inventoryId, String assetId);
     List<InventoryDTO> getAllInventory();
+
+    void addInventory(Inventory inventory);
+
+    void save(Inventory inventory);
+
     Page<Map<String, Object>> getUniqueRooms(Long inventoryId, int page, int size);
     Page<InsideRoomDTO> getAssetForRooms(int page, int size, Long inventoryId, String room);
 

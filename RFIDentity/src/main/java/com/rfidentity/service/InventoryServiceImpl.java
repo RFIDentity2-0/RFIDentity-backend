@@ -9,6 +9,8 @@ import com.rfidentity.model.InventoryItemOutcome;
 import com.rfidentity.repo.InventoryItemOutcomeRepo;
 import com.rfidentity.repo.InventoryItemRepo;
 import com.rfidentity.repo.InventoryRepo;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import com.rfidentity.api.dto.DashboardDTO;
 import com.rfidentity.api.dto.DiffDTO;
 import com.rfidentity.api.dto.RoomItemDTO;
@@ -28,8 +30,9 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
+@RequiredArgsConstructor
 @Service
+@Transactional
 public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
@@ -258,6 +261,10 @@ public class InventoryServiceImpl implements InventoryService {
         roomDTO.sort(Comparator.comparing(InsideRoomDTO::getAssetId));
 
         return new PageImpl<>(roomDTO, pageable, roomDTO.size());
+    }
+
+    public void save(Inventory inventory) {
+        inventoryRepo.save(inventory);
     }
 
     @Override
