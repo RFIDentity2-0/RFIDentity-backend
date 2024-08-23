@@ -107,4 +107,6 @@ public class InventoryController {
             return new ResponseEntity<>(new ApiResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/")
 }
