@@ -58,7 +58,7 @@ public class ExcelFileProcessor implements FileProcessor {
                 vmItem.setManufacturer(rowData.get(4));
                 vmItem.setHardwareType(rowData.get(5));
                 vmItem.setSerialNo(rowData.get(6));
-            
+                vmItem.setAssetId(rowData.get(0));
 
 
                 vmItemService.save(vmItem);
