@@ -11,8 +11,6 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public class ExcelFileProcessor implements FileProcessor {
 
-    private final SapItemService sapItemService;
-
     public void process(Path file) {
         log.info(String.format(
                 "Init processing file %s", file.getFileName()));
