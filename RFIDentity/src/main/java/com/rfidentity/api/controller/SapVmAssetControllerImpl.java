@@ -17,18 +17,29 @@ public class SapVmAssetControllerImpl implements SapVmAssetController {
 
     private final SapVmAssetService sapVmAssetService;
 
-    public ResponseEntity<SapVmAssetDTO> getAssetById(@PathVariable String assetId) {
+    @Override
+    public ResponseEntity<SapVmAssetDTO> getAssetById(
+            final String assetId
+    ) {
         return ResponseEntity.ok(sapVmAssetService.getAssetById(assetId));
     }
 
     @Override
-    public ResponseEntity<Void> updateSapItem(@PathVariable Long inventoryId, @PathVariable String assetId, @RequestBody SapItemUpdateDTO dto) {
+    public ResponseEntity<Void> updateSapItem(
+            Long inventoryId,
+            String assetId,
+            SapItemUpdateDTO dto
+    ) {
         sapVmAssetService.updateSapItem(inventoryId, assetId, dto);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<Void> updateVmItem(@PathVariable Long inventoryId, @PathVariable String assetId, @RequestBody VmItemUpdateDTO dto) {
+    public ResponseEntity<Void> updateVmItem(
+            Long inventoryId,
+            String assetId,
+            VmItemUpdateDTO dto
+    ) {
         sapVmAssetService.updateVmItem(inventoryId, assetId, dto);
         return ResponseEntity.noContent().build();
     }

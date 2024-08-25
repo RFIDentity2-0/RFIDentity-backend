@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,10 @@ public interface DashboardController {
     ResponseEntity<Page<CurrentInventoryAssetDTO>> getDashboardItems(
             @RequestParam(required = false) String assetId,
             @RequestParam(required = false) String description,
-            @SortDefault(sort = "status,desc") @PageableDefault(size = 20) final Pageable pageable
+            @RequestParam(required = false) Integer inventoryId,
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "status", direction = Sort.Direction.DESC)
+            }) @PageableDefault(size = 20) final Pageable pageable
     );
 
 
@@ -67,7 +71,9 @@ public interface DashboardController {
     )
     ResponseEntity<Page<CurrentLocationWithAssetsNumberDTO>> getLocationsWithAssetsNumber(
             @RequestParam(required = false) String location,
-            @SortDefault(sort = "status,desc") @PageableDefault(size = 20) final Pageable pageable
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "status", direction = Sort.Direction.DESC)
+            }) @PageableDefault(size = 20) final Pageable pageable
     );
 
 }

@@ -5,6 +5,7 @@ import com.rfidentity.api.dto.CurrentLocationWithAssetsNumberDTO;
 import com.rfidentity.model.CurrentInventoryAsset;
 import com.rfidentity.model.CurrentLocationsWithAssetsNumber;
 import com.rfidentity.repo.CurrentInventoryAssetRepository;
+import com.rfidentity.repo.InventoryRepository;
 import com.rfidentity.repo.CurrentInventoryAssetSpecification;
 import com.rfidentity.repo.CurrentLocationWithAssetsNumberRepository;
 import io.micrometer.common.util.StringUtils;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 
 
@@ -24,17 +26,22 @@ public class DashboardServiceImpl implements DashboardService {
 
     private final CurrentInventoryAssetRepository currentInventoryAssetRepository;
     private final CurrentLocationWithAssetsNumberRepository currentLocationWithAssetsNumberRepository;
+    private final InventoryRepository inventoryRepository;
+
 
     @Override
     public Page<CurrentInventoryAssetDTO> getDashboardItems(
             final String assetId,
             final String description,
+            final Integer inventoryId,
             Pageable pageable
     ) {
+        Integer idToUse = inventoryId != null ? inventoryId : getLastInventoryId();
 
         Specification<CurrentInventoryAsset> specification = CurrentInventoryAssetSpecification.assetSpecification(
                 assetId,
-                description
+                description,
+                idToUse
         );
 
         Page<CurrentInventoryAsset> page = currentInventoryAssetRepository.findAll(specification, pageable);
@@ -81,5 +88,9 @@ public class DashboardServiceImpl implements DashboardService {
                     .withRoom(asset.getRoom())
                     .withItemStatus(asset.getItemStatus())
                     .build();
+    }
+
+    private Integer getLastInventoryId() {
+        return inventoryRepository.findTopByOrderByIdDesc().getId();
     }
 }
