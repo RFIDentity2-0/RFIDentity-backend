@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,10 @@ public class DashboardControllerImpl implements DashboardController {
 
     @Override
     public ResponseEntity<Page<CurrentInventoryAssetDTO>> getDashboardItems(
-            @SortDefault(sort = "status,desc") @PageableDefault(size = 20) final Pageable pageable
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "status", direction = Sort.Direction.DESC)
+            })
+            @PageableDefault(size = 20) final Pageable pageable
     ) {
         return  ResponseEntity.ok(dashboardService.getDashboardItems(pageable));
     }
