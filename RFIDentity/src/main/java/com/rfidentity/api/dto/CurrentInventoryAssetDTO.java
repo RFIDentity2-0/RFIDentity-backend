@@ -13,21 +13,13 @@ import lombok.NoArgsConstructor;
 public class CurrentInventoryAssetDTO {
 
     private Integer inventoryId;
-
     private String assetId;
-
     private String description;
-
     private String sapRoom;
-
     private String status;
-
     private String location;
-
     private String building;
-
     private String room;
-
     private String itemStatus;
 
 }
