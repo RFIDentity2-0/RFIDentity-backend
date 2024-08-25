@@ -1,6 +1,7 @@
 package com.rfidentity.api.controller;
 
 import com.rfidentity.api.dto.CurrentInventoryAssetDTO;
+import com.rfidentity.api.dto.CurrentLocationWithAssetsNumberDTO;
 import com.rfidentity.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,18 @@ public class DashboardControllerImpl implements DashboardController {
 
     @Override
     public ResponseEntity<Page<CurrentInventoryAssetDTO>> getDashboardItems(
-            @SortDefault.SortDefaults({
-                    @SortDefault(sort = "status", direction = Sort.Direction.DESC)
-            })
-            @PageableDefault(size = 20) final Pageable pageable
+            final String assetId,
+            final String description,
+            final Pageable pageable
     ) {
-        return  ResponseEntity.ok(dashboardService.getDashboardItems(pageable));
+        return  ResponseEntity.ok(dashboardService.getDashboardItems(assetId, description, pageable));
+    }
+
+    @Override
+    public ResponseEntity<Page<CurrentLocationWithAssetsNumberDTO>> getLocationsWithAssetsNumber(
+            String location,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(dashboardService.getLocationsWithAssetsNumber(location, pageable));
     }
 }

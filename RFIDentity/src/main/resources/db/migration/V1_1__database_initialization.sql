@@ -40,19 +40,6 @@ CREATE TABLE vm_item
     FOREIGN KEY (inventory_id) REFERENCES inventory (id) ON DELETE CASCADE
 );
 
-CREATE table inventory_assets
-(
-    id           SERIAL PRIMARY KEY,
-    inventory_id BIGINT      NOT NULL,
-    sap_asset_id VARCHAR(64) NOT NULL,
-    vm_asset_id  VARCHAR(64) NOT NULL,
-
-
-    FOREIGN KEY (inventory_id, sap_asset_id) REFERENCES sap_item (inventory_id, asset_id) ON DELETE CASCADE,
-    FOREIGN KEY (inventory_id, vm_asset_id) REFERENCES vm_item (inventory_id, asset_id) ON DELETE CASCADE,
-    FOREIGN KEY (inventory_id) REFERENCES inventory (id) ON DELETE CASCADE
-);
-
 CREATE TABLE inventory_assets_outcome
 (
     id                BIGSERIAL PRIMARY KEY,

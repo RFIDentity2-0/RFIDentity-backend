@@ -1,4 +1,4 @@
-INSERT INTO inventory
+INSERT INTO  inventory
 (id)
 VALUES
     (1);

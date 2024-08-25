@@ -33,11 +33,20 @@ SELECT
     cia.item_status,
     io.location AS inventory_location,
     io.status AS inventory_status,
-    io.comment
+    io.comment,
+    io.scanned_date
 FROM inventory i
     JOIN current_inventory_assets cia ON i.id = cia.inventory_id
     LEFT JOIN inventory_assets_outcome io ON io.inventory_id = cia.inventory_id AND io.asset_id = cia.asset_id
 WHERE
     cia.inventory_id = (SELECT MAX(id) FROM inventory);
 
-
+CREATE VIEW current_locations_with_assets_number AS
+SELECT
+    location,
+    scanned_date,
+    count (1)
+FROM current_inventory_assets_with_outcome
+WHERE location IS NOT NULL
+  AND inventory_id = (SELECT MAX(id) FROM inventory)
+GROUP BY location, scanned_date
