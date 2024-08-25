@@ -1,6 +1,7 @@
 package com.rfidentity.service;
 
 import com.rfidentity.model.Inventory;
+import com.rfidentity.model.InventoryItem;
 import com.rfidentity.model.SapItem;
 import com.rfidentity.model.VmItem;
 import lombok.RequiredArgsConstructor;
@@ -23,20 +24,21 @@ public class ExcelFileProcessor implements FileProcessor {
     private final SAPFileProcessor sapFileProcessor;
     private final VmItemService vmItemService;
     private final VMFileProcessor vmFileProcessor;
-
+    private final InventoryItemService inventoryItemService;
+    int i = 0;
     @Override
     public void process(Path file,Path file2) {
         log.info(String.format("Init processing file %s", file.getFileName()));
-        Inventory inventory = new Inventory();
-        inventory.setDate(LocalDate.now());
-        inventoryService.save(inventory);
+
         try {
             System.out.println("0");
             Map<Integer, List<String>> data = sapFileProcessor.readExcel(new File("src/main/resources/SAPVM/SAP_20240414.xlsx"));
             System.out.println("1");
             Map<Integer, List<String>> data2 = vmFileProcessor.readExcel(new File("src/main/resources/SAPVM/VM_20240414.xlsx"));
             System.out.println("2");
-
+            Inventory inventory = new Inventory();
+            inventory.setDate(LocalDate.now());
+            inventoryService.save(inventory);
 
             data.forEach((rowNum, rowData) -> {
                 SapItem sapItem = new SapItem();
@@ -47,6 +49,7 @@ public class ExcelFileProcessor implements FileProcessor {
                 sapItem.setRoom(rowData.get(4));
                 sapItem.setAssetId(rowData.get(5));
                 sapItemService.save(sapItem);
+
             });
 
             data2.forEach((rowNum, rowData) -> {
@@ -59,14 +62,32 @@ public class ExcelFileProcessor implements FileProcessor {
                 vmItem.setHardwareType(rowData.get(5));
                 vmItem.setSerialNo(rowData.get(6));
                 vmItem.setAssetId(rowData.get(0));
-
-
                 vmItemService.save(vmItem);
+                InventoryItem inventoryItem = new InventoryItem();
+                inventoryItem.setInventoryId(inventory);
+                inventoryItemService.save(inventoryItem);
+                System.out.println(rowData.get(0));
             });
+            data2.forEach((rowNum, rowData) -> {
+                    data.forEach((rowNum2, rowData2) -> {
+                        System.out.println(rowData2.get(0));
+                                System.out.println(i);
+                                i++;
+                    }
+
+
+                    );
+                    });
+
+            InventoryItem inventoryItem = new InventoryItem();
+            inventoryItem.setInventoryId(inventory);
+            inventoryItemService.save(inventoryItem);
+
         } catch (IOException e) {
             log.error("Error processing file", e);
             throw new RuntimeException(e);
         }
+
 
     }
 

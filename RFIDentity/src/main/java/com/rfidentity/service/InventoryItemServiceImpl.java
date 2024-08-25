@@ -17,5 +17,8 @@ public class InventoryItemServiceImpl implements InventoryItemService {
     private InventoryItemRepo inventoryItemRepo;
 
 
-
+    @Override
+    public void save(InventoryItem inventoryItem) {
+        inventoryItemRepo.save(inventoryItem);
+    }
 }
