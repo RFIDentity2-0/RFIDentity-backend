@@ -35,11 +35,17 @@ public class ExcelFileProcessor implements FileProcessor {
     }
     @Override
     public void process(Path file,Path file2) {
+
+
         log.info(String.format("Init processing file %s", file.getFileName()));
 
         try {
-            Map<Integer, List<String>> data = sapFileProcessor.readExcel(new File("src/main/resources/SAPVM/SAP_20240414.xlsx"));
-            Map<Integer, List<String>> data2 = vmFileProcessor.readExcel(new File("src/main/resources/SAPVM/VM_20240414.xlsx"));
+            if (!file.toFile().exists() || !file2.toFile().exists()) {
+            log.warn("Pliki SAP lub VM nie zostały znalezione. Inwentaryzacja rozpocznie się, gdy załadujesz pliki.");
+            return;
+        }
+            Map<Integer, List<String>> data = sapFileProcessor.readExcel(new File("src/main/resources/SAPVM/SAP.xlsx"));
+            Map<Integer, List<String>> data2 = vmFileProcessor.readExcel(new File("src/main/resources/SAPVM/VM.xlsx"));
             Inventory inventory = new Inventory();
             inventory.setDate(LocalDate.now().atStartOfDay());
             inventoryService.save(inventory);
