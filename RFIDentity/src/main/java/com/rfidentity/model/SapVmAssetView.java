@@ -1,20 +1,28 @@
 package com.rfidentity.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "vm_item")
-@IdClass(VmItemId.class)
-public class VmItem {
-    @Id
-    @Column(name = "inventory_id")
-    private Long inventoryId;
+@Table(name = "sap_vm_asset_view")
+public class SapVmAssetView {
 
     @Id
-    @Column(name = "asset_id", length = 64)
-    private String assetId;
+    @Column(name = "sap_asset_id")
+    private String sapAssetId;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "sap_room")
+    private String sapRoom;
+
+    @Column(name = "vm_asset_id")
+    private String vmAssetId;
 
     @Column(name = "system_name")
     private String systemName;
@@ -39,14 +47,4 @@ public class VmItem {
 
     @Column(name = "department")
     private String department;
-
-    @Column(name = "location")
-    private String location;
-
-    @Column(name = "building")
-    private String building;
-
-    @Column(name = "room")
-    private String room;
-
 }
