@@ -25,20 +25,21 @@ public class SapVmAssetControllerImpl implements SapVmAssetController {
     }
 
     @Override
-    public ResponseEntity<Void> updateSapItem(
+    public ResponseEntity<String> updateSapItem(
             String assetId,
             SapItemUpdateDTO dto
     ) {
         sapVmAssetService.updateSapItem(assetId, dto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("SapItem updated successfully");
     }
 
     @Override
-    public ResponseEntity<Void> updateVmItem(
+    public ResponseEntity<String> updateVmItem(
             String assetId,
             VmItemUpdateDTO dto
     ) {
         sapVmAssetService.updateVmItem(assetId, dto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("VmItem updated successfully");
+
     }
 }

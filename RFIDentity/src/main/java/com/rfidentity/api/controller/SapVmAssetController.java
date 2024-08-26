@@ -54,7 +54,7 @@ public interface SapVmAssetController {
             )
     }
     )
-    ResponseEntity<Void> updateSapItem(
+    ResponseEntity<String> updateSapItem(
             @PathVariable String assetId,
             @RequestBody SapItemUpdateDTO dto);
 
@@ -75,7 +75,7 @@ public interface SapVmAssetController {
             )
     }
     )
-    ResponseEntity<Void> updateVmItem(
+    ResponseEntity<String> updateVmItem(
             @PathVariable String assetId,
             @RequestBody VmItemUpdateDTO dto);
 }
