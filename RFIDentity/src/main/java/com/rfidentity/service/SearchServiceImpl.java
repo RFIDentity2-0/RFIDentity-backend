@@ -1,8 +1,7 @@
 package com.rfidentity.service;
 
 import com.rfidentity.model.SapItem;
-import com.rfidentity.repo.SapItemRepo;
-import com.rfidentity.repo.VmItemRepo;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
