@@ -26,21 +26,19 @@ public class SapVmAssetControllerImpl implements SapVmAssetController {
 
     @Override
     public ResponseEntity<Void> updateSapItem(
-            Long inventoryId,
             String assetId,
             SapItemUpdateDTO dto
     ) {
-        sapVmAssetService.updateSapItem(inventoryId, assetId, dto);
+        sapVmAssetService.updateSapItem(assetId, dto);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     public ResponseEntity<Void> updateVmItem(
-            Long inventoryId,
             String assetId,
             VmItemUpdateDTO dto
     ) {
-        sapVmAssetService.updateVmItem(inventoryId, assetId, dto);
+        sapVmAssetService.updateVmItem(assetId, dto);
         return ResponseEntity.noContent().build();
     }
 }

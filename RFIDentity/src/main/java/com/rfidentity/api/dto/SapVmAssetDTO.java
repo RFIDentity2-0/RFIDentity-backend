@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SapVmAssetDTO {
-    private String sapAssetId;
+    private String assetId;
     private String description;
     private String sapRoom;
-    private String vmAssetId;
     private String systemName;
     private String dnsName;
     private String type;

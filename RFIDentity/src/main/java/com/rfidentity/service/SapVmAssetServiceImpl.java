@@ -32,10 +32,9 @@ public class SapVmAssetServiceImpl implements SapVmAssetService {
         }
 
         return SapVmAssetDTO.builder()
-                .withSapAssetId(sapVmAsset.getSapAssetId())
+                .withAssetId(sapVmAsset.getAssetId())
                 .withDescription(sapVmAsset.getDescription())
                 .withSapRoom(sapVmAsset.getSapRoom())
-                .withVmAssetId(sapVmAsset.getVmAssetId())
                 .withSystemName(sapVmAsset.getSystemName())
                 .withDnsName(sapVmAsset.getDnsName())
                 .withType(sapVmAsset.getType())
@@ -47,10 +46,12 @@ public class SapVmAssetServiceImpl implements SapVmAssetService {
                 .build();
     }
 
+    public void updateSapItem(String assetId, SapItemUpdateDTO dto) {
+        Long latestInventoryId = sapItemRepository.findLatestInventoryId()
+                .orElseThrow(() -> new EntityNotFoundException("No inventory found"));
 
-    public void updateSapItem(Long inventoryId, String assetId, SapItemUpdateDTO dto) {
-        SapItem sapItem = sapItemRepository.findByInventoryIdAndAssetId(inventoryId, assetId)
-                .orElseThrow(() -> new EntityNotFoundException("SAP item not found with inventoryId: " + inventoryId + " and assetId: " + assetId));
+        SapItem sapItem = sapItemRepository.findByInventoryIdAndAssetId(latestInventoryId, assetId)
+                .orElseThrow(() -> new EntityNotFoundException("SAP item not found with inventoryId: " + latestInventoryId + " and assetId: " + assetId));
 
         sapItem.setDescription(dto.getDescription());
         sapItem.setRoom(dto.getSapRoom());
@@ -58,10 +59,12 @@ public class SapVmAssetServiceImpl implements SapVmAssetService {
         sapItemRepository.save(sapItem);
     }
 
+    public void updateVmItem(String assetId, VmItemUpdateDTO dto) {
+        Long latestInventoryId = vmItemRepository.findLatestInventoryId()
+                .orElseThrow(() -> new EntityNotFoundException("No inventory found for assetId: " + assetId));
 
-    public void updateVmItem(Long inventoryId, String assetId, VmItemUpdateDTO dto) {
-        VmItem vmItem = vmItemRepository.findByInventoryIdAndAssetId(inventoryId, assetId)
-                .orElseThrow(() -> new EntityNotFoundException("VM item not found with inventoryId: " + inventoryId + " and assetId: " + assetId));
+        VmItem vmItem = vmItemRepository.findByInventoryIdAndAssetId(latestInventoryId, assetId)
+                .orElseThrow(() -> new EntityNotFoundException("VM item not found with inventoryId: " + latestInventoryId + " and assetId: " + assetId));
 
         vmItem.setSystemName(dto.getSystemName());
         vmItem.setDnsName(dto.getDnsName());
