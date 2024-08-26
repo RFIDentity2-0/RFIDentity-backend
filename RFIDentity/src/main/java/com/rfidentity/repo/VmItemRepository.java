@@ -14,4 +14,5 @@ public interface VmItemRepository extends JpaRepository<VmItem, String> {
 
     @Query("SELECT MAX(inventoryId) FROM VmItem")
     Optional<Long> findLatestInventoryId();
+
 }
