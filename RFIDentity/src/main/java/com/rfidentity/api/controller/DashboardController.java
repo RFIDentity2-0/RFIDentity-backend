@@ -45,7 +45,6 @@ public interface DashboardController {
     ResponseEntity<Page<CurrentInventoryAssetDTO>> getDashboardItems(
             @RequestParam(required = false) String assetId,
             @RequestParam(required = false) String description,
-            @RequestParam(required = false) Integer inventoryId,
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "status", direction = Sort.Direction.DESC)
             }) @PageableDefault(size = 20) final Pageable pageable

@@ -13,23 +13,31 @@ public class CurrentInventoryAssetSpecification {
 
     public static Specification<CurrentInventoryAsset> assetSpecification(
             String assetId,
-            String description,
-            Integer inventoryId
+            String description
     ) {
 
         return (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
+            Predicate idPredicate =
+                    criteriaBuilder.like(
+                            root.get("assetId"),
+                            !StringUtils.isEmpty(assetId) ? likePattern(assetId) : null
+                    );
+            Predicate descriptionPredicate =
+                    criteriaBuilder.like(
+                            root.get("description"),
+                            !StringUtils.isEmpty(description) ? likePattern(description) : null
+                    );
+
+            List<Predicate> includeInSearch = new ArrayList<>(8);
 
             if (!StringUtils.isEmpty(assetId)) {
-                predicates.add(criteriaBuilder.like(root.get("assetId"), likePattern(assetId)));
+                includeInSearch.add(idPredicate);
             }
             if (!StringUtils.isEmpty(description)) {
-                predicates.add(criteriaBuilder.like(root.get("description"), likePattern(description)));
+                includeInSearch.add(descriptionPredicate);
             }
-
-            predicates.add(criteriaBuilder.equal(root.get("inventoryId"), inventoryId));
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            Predicate[] array = includeInSearch.toArray(new Predicate[0]);
+            return criteriaBuilder.and(includeInSearch.toArray(array));
         };
     }
 

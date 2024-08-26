@@ -33,15 +33,13 @@ public class DashboardServiceImpl implements DashboardService {
     public Page<CurrentInventoryAssetDTO> getDashboardItems(
             final String assetId,
             final String description,
-            final Integer inventoryId,
             Pageable pageable
     ) {
-        Integer idToUse = inventoryId != null ? inventoryId : getLastInventoryId();
 
         Specification<CurrentInventoryAsset> specification = CurrentInventoryAssetSpecification.assetSpecification(
                 assetId,
-                description,
-                idToUse
+                description
+
         );
 
         Page<CurrentInventoryAsset> page = currentInventoryAssetRepository.findAll(specification, pageable);
@@ -88,9 +86,5 @@ public class DashboardServiceImpl implements DashboardService {
                     .withRoom(asset.getRoom())
                     .withItemStatus(asset.getItemStatus())
                     .build();
-    }
-
-    private Integer getLastInventoryId() {
-        return inventoryRepository.findTopByOrderByIdDesc().getId();
     }
 }

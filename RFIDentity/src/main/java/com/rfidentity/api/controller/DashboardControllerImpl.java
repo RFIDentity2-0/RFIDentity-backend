@@ -25,11 +25,10 @@ public class DashboardControllerImpl implements DashboardController {
     public ResponseEntity<Page<CurrentInventoryAssetDTO>> getDashboardItems(
             final String assetId,
             final String description,
-            final Integer inventoryId,
             final Pageable pageable
 
     ) {
-        return  ResponseEntity.ok(dashboardService.getDashboardItems(assetId, description, inventoryId, pageable));
+        return  ResponseEntity.ok(dashboardService.getDashboardItems(assetId, description, pageable));
     }
 
     @Override

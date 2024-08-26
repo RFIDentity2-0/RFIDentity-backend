@@ -12,7 +12,6 @@ public interface DashboardService {
     Page<CurrentInventoryAssetDTO> getDashboardItems(
             final String assetId,
             final String description,
-            final Integer inventoryId,
             Pageable pageable
     );
 
