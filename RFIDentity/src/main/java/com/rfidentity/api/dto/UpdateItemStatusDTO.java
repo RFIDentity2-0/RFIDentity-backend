@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder(setterPrefix = "with")
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssetDetailDTO {
-    private String assetId;
-    private String description;
+public class UpdateItemStatusDTO {
     private String itemStatus;
 }

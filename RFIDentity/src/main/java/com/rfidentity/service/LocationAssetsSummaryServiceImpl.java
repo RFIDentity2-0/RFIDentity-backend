@@ -46,7 +46,7 @@ public class LocationAssetsSummaryServiceImpl implements LocationAssetsSummarySe
                             .map(asset -> AssetDetailDTO.builder()
                                     .withAssetId(asset.getAssetId())
                                     .withDescription(asset.getDescription())
-                                    .withStatus(asset.getStatus())
+                                    .withItemStatus(asset.getItemStatus())
                                     .build())
                             .collect(Collectors.toList());
                     return LocationAssetsSummaryDTO.builder()

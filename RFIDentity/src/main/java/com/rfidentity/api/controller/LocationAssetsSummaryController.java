@@ -41,11 +41,10 @@ public interface LocationAssetsSummaryController {
     )
     ResponseEntity<Page<LocationAssetsSummaryDTO>> getLocationAssetsSummary(
             @RequestParam(value = "location", required = false) String location,
-            @SortDefault(sort = "location", direction = Sort.Direction.DESC)
             @PageableDefault(size = 20) final Pageable pageable
     );
 
-    @GetMapping("/insideLocation/{location}")
+    @GetMapping("/insideLocation")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get data for specific location",

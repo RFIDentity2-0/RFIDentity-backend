@@ -24,5 +24,5 @@ public class LocationAssetsSummary {
     private String description;
 
     @Column(name = "status")
-    private String status;
+    private String itemStatus;
 }
