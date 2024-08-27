@@ -1,37 +1,23 @@
 package com.rfidentity.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "inventory")
 public class Inventory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Integer id;
 
-    @Column(name = "date")
-    private LocalDate date;
-
-    @OneToMany(mappedBy = "inventoryId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<InventoryItem> items;
-
-    @OneToMany(mappedBy = "inventoryId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VmItem> vmItems;
-
-    @OneToMany(mappedBy = "inventoryId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SapItem> sapItems;
-
+    @Column(name = "date", nullable = false)
+    private LocalDateTime date;
 }

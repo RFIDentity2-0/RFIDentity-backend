@@ -1,22 +1,24 @@
 package com.rfidentity.api.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDate;
+import lombok.NoArgsConstructor;
 
 @Data
-public class VmItemDTO {
-
-    private long id;
+@Builder(setterPrefix = "with")
+@NoArgsConstructor
+@AllArgsConstructor
+public class SapVmAssetDTO {
+    private String assetId;
+    private String description;
+    private String sapRoom;
     private String systemName;
     private String dnsName;
     private String type;
     private String manufacturer;
     private String hardwareType;
     private String serialNo;
-    private LocalDate dateOfInstallation;
     private String status;
     private String department;
-    private String assetId;
-    private long inventoryId;
 }

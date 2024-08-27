@@ -19,16 +19,18 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ExcelFileProcessor implements FileProcessor {
     private final InventoryService inventoryService;
-    private final SapItemService sapItemService;
     private final SAPFileProcessor sapFileProcessor;
     private final VmItemService vmItemService;
+    private final SapItemService sapItemService;
     private final VMFileProcessor vmFileProcessor;
+    private long inventory_id;
 
     @Override
     public void process(Path file,Path file2) {
         log.info(String.format("Init processing file %s", file.getFileName()));
         Inventory inventory = new Inventory();
-        inventory.setDate(LocalDate.now());
+        inventory.setDate(LocalDate.now().atStartOfDay());
+        inventory_id = inventory.getId();
         inventoryService.save(inventory);
         try {
             System.out.println("0");
@@ -40,9 +42,6 @@ public class ExcelFileProcessor implements FileProcessor {
 
             data.forEach((rowNum, rowData) -> {
                 SapItem sapItem = new SapItem();
-                sapItem.setInventoryId(inventory);
-                sapItem.setAssetNo(Long.parseLong(rowData.get(0)));
-                sapItem.setSubNo(Long.parseLong(rowData.get(1)));
                 sapItem.setDescription(rowData.get(3));
                 sapItem.setRoom(rowData.get(4));
                 sapItem.setAssetId(rowData.get(5));
@@ -51,7 +50,7 @@ public class ExcelFileProcessor implements FileProcessor {
 
             data2.forEach((rowNum, rowData) -> {
                 VmItem vmItem = new VmItem();
-                vmItem.setInventoryId(inventory);
+                vmItem.setInventoryId(inventory_id);
                 vmItem.setSystemName(rowData.get(1));
                 vmItem.setDnsName(rowData.get(2));
                 vmItem.setType(rowData.get(3));
@@ -72,6 +71,8 @@ public class ExcelFileProcessor implements FileProcessor {
 
     @Override
     public void process(Path file) {
-
+        log.info(String.format(
+                "Init processing file %s", file.getFileName()));
     }
+
 }
