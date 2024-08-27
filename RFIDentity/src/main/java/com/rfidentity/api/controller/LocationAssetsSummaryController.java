@@ -19,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/api/locations")
 @Tag(name = "Locations", description = "Service for locations")
 public interface LocationAssetsSummaryController {
@@ -40,7 +42,7 @@ public interface LocationAssetsSummaryController {
     }
     )
     ResponseEntity<Page<LocationAssetsSummaryDTO>> getLocationAssetsSummary(
-            @RequestParam(value = "location", required = false) String location,
+            @RequestParam(value = "location", required = false) List<String> locations,
             @PageableDefault(size = 20) final Pageable pageable
     );
 

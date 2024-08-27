@@ -1,7 +1,12 @@
 package com.rfidentity.service;
 
+import com.rfidentity.api.dto.MobileOutcomeUpdateDTO;
 import com.rfidentity.api.dto.VmItemUpdateDTO;
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 public interface MobileService {
-    void updateItemStatus(String assetId, VmItemUpdateDTO dto);
+
+    void addAssetsOutcome(MobileOutcomeUpdateDTO mobileOutcomeUpdateDTO);
 }

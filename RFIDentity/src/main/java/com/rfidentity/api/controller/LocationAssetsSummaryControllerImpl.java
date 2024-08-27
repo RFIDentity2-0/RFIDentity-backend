@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -20,11 +22,11 @@ public class LocationAssetsSummaryControllerImpl implements LocationAssetsSummar
 
     @Override
     public ResponseEntity<Page<LocationAssetsSummaryDTO>> getLocationAssetsSummary(
-            String location,
+            List<String> locations,
             Pageable pageable
     ) {
-        Page<LocationAssetsSummaryDTO> page = locationAssetsSummaryService.getLocationAssetsSummary(location, pageable);
-        return ResponseEntity.ok(page);
+        Page<LocationAssetsSummaryDTO> result = locationAssetsSummaryService.getLocationAssetsSummary(locations, pageable);
+        return ResponseEntity.ok(result);
     }
 
     @Override

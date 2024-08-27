@@ -74,9 +74,6 @@ public class SapVmAssetServiceImpl implements SapVmAssetService {
         vmItem.setSerialNo(dto.getSerialNo());
         vmItem.setStatus(dto.getStatus());
         vmItem.setDepartment(dto.getDepartment());
-        vmItem.setLocation(dto.getLocation());
-        vmItem.setBuilding(dto.getBuilding());
-        vmItem.setRoom(dto.getRoom());
 
         vmItemRepository.save(vmItem);
     }

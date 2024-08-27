@@ -20,17 +20,17 @@ WHERE
 
 CREATE VIEW location_assets_summary AS
 SELECT
+    COUNT(vi.asset_id) OVER (PARTITION BY io.location) AS asset_count,
+        vi.asset_id,
     vi.location,
-    COUNT(io.asset_id) OVER (PARTITION BY vi.location) AS asset_count,
-        io.asset_id,
     si.description,
     io.status
 FROM
-    inventory_assets_outcome io
-        JOIN sap_item si ON io.asset_id = si.asset_id
-        JOIN vm_item vi ON io.asset_id = vi.asset_id
+    sap_item si
+        LEFT JOIN vm_item vi ON si.asset_id = vi.asset_id AND si.inventory_id = vi.inventory_id
+        LEFT JOIN inventory_assets_outcome io ON si.asset_id = io.asset_id AND si.inventory_id = io.inventory_id
 WHERE
-    io.inventory_id = (SELECT MAX(id) FROM inventory)
+    si.inventory_id = (SELECT MAX(id) FROM inventory)
 ORDER BY
     vi.location, io.asset_id
     LIMIT 8;

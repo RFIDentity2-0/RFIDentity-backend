@@ -16,10 +16,6 @@ public interface CurrentInventoryAssetsWithOutcomeRepository extends JpaReposito
 
     Page<CurrentInventoryAssetsWithOutcome> findByLocation(String location, Pageable pageable);
 
-    @Modifying
-    @Query("UPDATE InventoryAssetsOutcome io SET io.comment = :comment WHERE io.inventoryId = :inventoryId AND io.assetId = :assetId")
-    int updateCommentByInventoryIdAndAssetId(@Param("comment") String comment, @Param("inventoryId") Long inventoryId, @Param("assetId") String assetId);
-
     @Query("SELECT MAX(io.inventoryId) FROM InventoryAssetsOutcome io WHERE io.assetId = :assetId")
     Optional<Long> findLatestInventoryIdForAsset(@Param("assetId") String assetId);
 }

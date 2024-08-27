@@ -3,7 +3,13 @@ package com.rfidentity.service;
 import com.rfidentity.api.dto.AssetDetailDTO;
 import com.rfidentity.api.dto.CurrentInventoryAssetsWithOutcomeDTO;
 import com.rfidentity.api.dto.LocationAssetsSummaryDTO;
+import com.rfidentity.model.CurrentInventoryAsset;
 import com.rfidentity.model.CurrentInventoryAssetsWithOutcome;
+import com.rfidentity.model.CurrentLocationsWithAssetsNumber;
+import com.rfidentity.model.InventoryAssetsOutcome;
+import com.rfidentity.repo.CurrentInventoryAssetSpecification;
+import com.rfidentity.repo.CurrentLocationSpecification;
+import com.rfidentity.repo.InventoryAssetOutcomeRepository;
 import com.rfidentity.model.LocationAssetsSummary;
 import com.rfidentity.repo.CurrentInventoryAssetsWithOutcomeRepository;
 import com.rfidentity.repo.LocationAssetsSummaryRepository;
@@ -14,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,15 +36,25 @@ public class LocationAssetsSummaryServiceImpl implements LocationAssetsSummarySe
 
     private final CurrentInventoryAssetsWithOutcomeRepository outcomeRepository;
 
+    private final InventoryAssetOutcomeRepository inventoryAssetsOutcomeRepository;
+
 
     @Override
-    public Page<LocationAssetsSummaryDTO> getLocationAssetsSummary(String location, Pageable pageable) {
-        Page<LocationAssetsSummary> page = !StringUtils.isBlank(location)
-                ? locationAssetsSummaryRepository.findByLocationLikeName(location, pageable)
-                : locationAssetsSummaryRepository.findAll(pageable);
+    public Page<LocationAssetsSummaryDTO> getLocationAssetsSummary(List<String> locations, Pageable pageable) {
+        Page<LocationAssetsSummary> page;
+
+        if (locations != null && !locations.isEmpty()) {
+            page = locationAssetsSummaryRepository.findByLocationIn(locations, pageable);
+        } else {
+            page = locationAssetsSummaryRepository.findAll(pageable);
+        }
 
         Map<String, List<LocationAssetsSummary>> groupedByLocation = page.getContent().stream()
-                .collect(Collectors.groupingBy(LocationAssetsSummary::getLocation));
+                .filter(asset -> asset != null)
+                .collect(Collectors.groupingBy(asset -> {
+                    String location = asset.getLocation();
+                    return (location == null || location.isEmpty()) ? "Default Room" : location;
+                }));
 
         List<LocationAssetsSummaryDTO> list = groupedByLocation.entrySet().stream()
                 .map(entry -> {
@@ -59,6 +76,8 @@ public class LocationAssetsSummaryServiceImpl implements LocationAssetsSummarySe
 
         return new PageImpl<>(list, pageable, page.getTotalElements());
     }
+
+
     @Override
     public Page<CurrentInventoryAssetsWithOutcomeDTO> getAssetsByLocation(String location, Pageable pageable) {
         Page<CurrentInventoryAssetsWithOutcome> assetsPage = outcomeRepository.findByLocation(location, pageable);
@@ -80,15 +99,15 @@ public class LocationAssetsSummaryServiceImpl implements LocationAssetsSummarySe
     }
 
     @Override
-    @Transactional
     public void updateComment(String assetId, String comment) {
-        Long latestInventoryId = outcomeRepository.findLatestInventoryIdForAsset(assetId)
+        Long latestInventoryId = inventoryAssetsOutcomeRepository.findLatestInventoryIdForAsset(assetId)
                 .orElseThrow(() -> new EntityNotFoundException("No inventory found for assetId: " + assetId));
 
-        int updatedRows = outcomeRepository.updateCommentByInventoryIdAndAssetId(comment, latestInventoryId, assetId);
+        InventoryAssetsOutcome outcome = inventoryAssetsOutcomeRepository.findByInventoryIdAndAssetId(latestInventoryId, assetId)
+                .orElseThrow(() -> new EntityNotFoundException("No record found for inventoryId: " + latestInventoryId + " and assetId: " + assetId));
 
-        if (updatedRows == 0) {
-            throw new EntityNotFoundException("No record found for inventoryId: " + latestInventoryId + " and assetId: " + assetId);
-        }
+        outcome.setComment(comment);
+
+        inventoryAssetsOutcomeRepository.save(outcome);
     }
 }

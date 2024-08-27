@@ -17,12 +17,6 @@ public class VmItemDTO {
     private LocalDate dateOfInstallation;
     private String status;
     private String department;
-    private String personId;
-    private String lastName;
-    private String firstName;
-    private String location;
-    private String building;
-    private String room;
     private String assetId;
     private long inventoryId;
 }

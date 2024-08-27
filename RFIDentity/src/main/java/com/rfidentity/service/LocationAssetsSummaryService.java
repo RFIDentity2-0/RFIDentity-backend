@@ -6,8 +6,10 @@ import com.rfidentity.repo.LocationAssetsSummaryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface LocationAssetsSummaryService {
-    Page<LocationAssetsSummaryDTO> getLocationAssetsSummary(String location, Pageable pageable);
+    Page<LocationAssetsSummaryDTO> getLocationAssetsSummary(List<String> locations, Pageable pageable);
 
     Page<CurrentInventoryAssetsWithOutcomeDTO> getAssetsByLocation(String location, Pageable pageable);
 
