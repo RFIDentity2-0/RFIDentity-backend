@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -62,5 +63,7 @@ public class DataInitializer {
         } catch (Exception e) {
             log.error("Error processing files: " + e.getMessage(), e);
         }
+
     }
+
 }
