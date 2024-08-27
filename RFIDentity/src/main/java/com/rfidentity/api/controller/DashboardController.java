@@ -45,9 +45,7 @@ public interface DashboardController {
     ResponseEntity<Page<CurrentInventoryAssetDTO>> getDashboardItems(
             @RequestParam(required = false) String assetId,
             @RequestParam(required = false) String description,
-            @SortDefault.SortDefaults({
-                    @SortDefault(sort = "status", direction = Sort.Direction.DESC)
-            }) @PageableDefault(size = 20) final Pageable pageable
+            @SortDefault(sort = "status,desc") @PageableDefault(size = 20) final Pageable pageable
     );
 
 
@@ -70,9 +68,7 @@ public interface DashboardController {
     )
     ResponseEntity<Page<CurrentLocationWithAssetsNumberDTO>> getLocationsWithAssetsNumber(
             @RequestParam(required = false) String location,
-            @SortDefault.SortDefaults({
-                    @SortDefault(sort = "status", direction = Sort.Direction.DESC)
-            }) @PageableDefault(size = 20) final Pageable pageable
+            @SortDefault(sort = "status,desc") @PageableDefault(size = 20) final Pageable pageable
     );
 
 }

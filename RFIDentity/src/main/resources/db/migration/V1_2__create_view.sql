@@ -15,8 +15,9 @@ SELECT
         END AS item_status
 FROM inventory i
          JOIN sap_item si ON i.id = si.inventory_id
-         LEFT JOIN vm_item vi ON si.inventory_id = vi.inventory_id AND si.asset_id = vi.asset_id;
-
+         LEFT JOIN vm_item vi ON si.inventory_id = vi.inventory_id AND si.asset_id = vi.asset_id
+WHERE
+    si.inventory_id = (SELECT MAX(id) FROM inventory);
 
 CREATE VIEW current_inventory_assets_with_outcome AS
 SELECT

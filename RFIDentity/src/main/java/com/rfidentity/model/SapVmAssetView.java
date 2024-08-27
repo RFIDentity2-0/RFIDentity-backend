@@ -12,17 +12,14 @@ import lombok.Data;
 public class SapVmAssetView {
 
     @Id
-    @Column(name = "sap_asset_id")
-    private String sapAssetId;
+    @Column(name = "asset_id")
+    private String assetId;
 
     @Column(name = "description")
     private String description;
 
     @Column(name = "sap_room")
     private String sapRoom;
-
-    @Column(name = "vm_asset_id")
-    private String vmAssetId;
 
     @Column(name = "system_name")
     private String systemName;

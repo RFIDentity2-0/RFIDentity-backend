@@ -16,7 +16,4 @@ public class VmItemUpdateDTO {
     private String serialNo;
     private String status;
     private String department;
-    private String location;
-    private String building;
-    private String room;
 }

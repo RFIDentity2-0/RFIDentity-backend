@@ -37,7 +37,7 @@ public interface SapVmAssetController {
     ResponseEntity<SapVmAssetDTO> getAssetById(@PathVariable String assetId);
 
 
-    @PutMapping("/{inventoryId}/sap/{assetId}")
+    @PutMapping("/sap/{assetId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Update data of specific sap assets for action page.",
@@ -54,12 +54,11 @@ public interface SapVmAssetController {
             )
     }
     )
-    ResponseEntity<Void> updateSapItem(
-            @PathVariable Long inventoryId,
+    ResponseEntity<String> updateSapItem(
             @PathVariable String assetId,
             @RequestBody SapItemUpdateDTO dto);
 
-    @PutMapping("/{inventoryId}/vm/{assetId}")
+    @PutMapping("/vm/{assetId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Update data of specific vm assets for action page.",
@@ -76,8 +75,7 @@ public interface SapVmAssetController {
             )
     }
     )
-    ResponseEntity<Void> updateVmItem(
-            @PathVariable Long inventoryId,
+    ResponseEntity<String> updateVmItem(
             @PathVariable String assetId,
             @RequestBody VmItemUpdateDTO dto);
 }

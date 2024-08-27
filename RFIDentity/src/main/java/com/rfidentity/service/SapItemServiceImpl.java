@@ -1,23 +1,19 @@
 package com.rfidentity.service;
 
-import com.rfidentity.api.dto.SapItemDTO;
 import com.rfidentity.model.SapItem;
 import com.rfidentity.repo.SapItemRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
 @Service
+@RequiredArgsConstructor
 public class SapItemServiceImpl implements SapItemService {
 
     @Autowired
-    private SapItemRepository sapItemRepo;
+    private SapItemRepository sapItemRepository;
 
     @Override
-    public void save(SapItem sapItem) {
-        sapItemRepo.save(sapItem);
-    }
+    public void save(SapItem sapItem) {sapItemRepository.save(sapItem);}
+
 }

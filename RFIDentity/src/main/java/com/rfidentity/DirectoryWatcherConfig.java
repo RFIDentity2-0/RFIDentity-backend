@@ -22,7 +22,6 @@ public class DirectoryWatcherConfig {
 
     private final DirectoryWatcherProperties properties;
     private final ExcelFileProcessor excelFileProcessor;
-    private final SapItemService sapItemService;
 
     @Bean
     FileSystemWatcher fileSystemWatcher() {
