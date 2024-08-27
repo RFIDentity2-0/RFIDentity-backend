@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
@@ -21,18 +23,26 @@ public class DataInitializer {
     @PostConstruct
     public void initializeData() {
 
-            log.info("The database is empty, starting to load data from the Excel file.");
+        log.info("The database is empty, starting to load data from the Excel file.");
 
-            try {
-                var filePath = Paths.get("src/main/resources/SAP_20240414.xlsx");
-                var filePath2 = Paths.get("src/main/resources/VM_20240414.xlsx");
-                excelFileProcessor.process(filePath,filePath2);
+        try {
+            File f = new File(".");
+            String absolutePath = f.getAbsolutePath();
+            Path sapFilePath = Paths.get("./RFIDentity/src/main/resources/SAPVM/Case1/SAP_SAMPLE01.xlsx");
+            Path vmFilePath = Paths.get("./RFIDentity/src/main/resources/SAPVM/Case1/VM_SAMPLE01.xlsx");
 
+            if (sapFilePath.toFile().exists()
+                    && sapFilePath.toFile().exists()) {
 
+                excelFileProcessor.process(sapFilePath, vmFilePath);
                 log.info("Data has been successfully loaded into the database.");
-            } catch (Exception e) {
-                log.error("Error processing file: " + e.getMessage(), e);
+            } else {
+                log.info("Sap file of VM file doesn't exist, skipping data initialization.");
             }
+
+        } catch (Exception e) {
+            log.error("Error processing file: " + e.getMessage(), e);
+        }
 
     }
 }

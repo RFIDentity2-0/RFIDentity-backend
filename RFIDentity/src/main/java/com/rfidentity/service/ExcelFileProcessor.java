@@ -3,11 +3,11 @@ package com.rfidentity.service;
 import com.rfidentity.model.Inventory;
 import com.rfidentity.model.SapItem;
 import com.rfidentity.model.VmItem;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -18,6 +18,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class ExcelFileProcessor implements FileProcessor {
+
     private final InventoryService inventoryService;
     private final SAPFileProcessor sapFileProcessor;
     private final VmItemService vmItemService;
@@ -26,22 +27,22 @@ public class ExcelFileProcessor implements FileProcessor {
     private long inventory_id;
 
     @Override
-    public void process(Path file,Path file2) {
-        log.info(String.format("Init processing file %s", file.getFileName()));
+    @Transactional
+    public void process(Path sapFilePath, Path vmFilePath) {
+
+        log.info(String.format("Init processing sapFilePath %s", sapFilePath.getFileName()));
         Inventory inventory = new Inventory();
         inventory.setDate(LocalDate.now().atStartOfDay());
-        inventory_id = inventory.getId();
         inventoryService.save(inventory);
-        try {
-            System.out.println("0");
-            Map<Integer, List<String>> data = sapFileProcessor.readExcel(new File("src/main/resources/SAPVM/SAP_20240414.xlsx"));
-            System.out.println("1");
-            Map<Integer, List<String>> data2 = vmFileProcessor.readExcel(new File("src/main/resources/SAPVM/VM_20240414.xlsx"));
-            System.out.println("2");
 
+        inventory_id = inventory.getId();
+        try {
+            Map<Integer, List<String>> data = sapFileProcessor.readExcel(sapFilePath.toFile());
+            Map<Integer, List<String>> data2 = vmFileProcessor.readExcel(vmFilePath.toFile());
 
             data.forEach((rowNum, rowData) -> {
                 SapItem sapItem = new SapItem();
+                sapItem.setInventoryId(inventory_id);
                 sapItem.setDescription(rowData.get(3));
                 sapItem.setRoom(rowData.get(4));
                 sapItem.setAssetId(rowData.get(5));
@@ -63,7 +64,7 @@ public class ExcelFileProcessor implements FileProcessor {
                 vmItemService.save(vmItem);
             });
         } catch (IOException e) {
-            log.error("Error processing file", e);
+            log.error("Error processing sapFilePath", e);
             throw new RuntimeException(e);
         }
 
