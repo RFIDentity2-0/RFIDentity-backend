@@ -18,8 +18,8 @@ WHERE i.id = (SELECT MAX(id) FROM inventory);
 
 CREATE VIEW location_assets_summary AS
 SELECT
-    COUNT(vi.asset_id) OVER (PARTITION BY io.location) AS asset_count,
-        vi.asset_id,
+    COUNT(si.asset_id) OVER (PARTITION BY io.location) AS asset_count,
+        si.asset_id,
     vi.location,
     si.description,
     io.status

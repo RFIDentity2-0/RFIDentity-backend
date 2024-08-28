@@ -68,7 +68,7 @@ public class LocationAssetsSummaryServiceImpl implements LocationAssetsSummarySe
                             .collect(Collectors.toList());
                     return LocationAssetsSummaryDTO.builder()
                             .withLocation(loc)
-                            .withAssetCount((long) assetDTOs.size())
+                            .withAssetCount(assets.getFirst().getAssetCount())
                             .withAssets(assetDTOs)
                             .build();
                 })
