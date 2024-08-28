@@ -19,13 +19,13 @@ public class CurrentInventoryAssetSpecification {
         return (root, query, criteriaBuilder) -> {
             Predicate idPredicate =
                     criteriaBuilder.like(
-                            root.get("assetId"),
-                            !StringUtils.isEmpty(assetId) ? likePattern(assetId) : null
+                            criteriaBuilder.lower(root.get("assetId")),
+                            !StringUtils.isEmpty(assetId) ? likePattern(assetId).toLowerCase() : null
                     );
             Predicate descriptionPredicate =
                     criteriaBuilder.like(
-                            root.get("description"),
-                            !StringUtils.isEmpty(description) ? likePattern(description) : null
+                            criteriaBuilder.lower(root.get("description")),
+                            !StringUtils.isEmpty(description) ? likePattern(description).toLowerCase() : null
                     );
 
             List<Predicate> includeInSearch = new ArrayList<>(8);
