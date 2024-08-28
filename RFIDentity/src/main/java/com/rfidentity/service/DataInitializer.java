@@ -26,7 +26,7 @@ public class DataInitializer {
 
         log.info("The database is empty, starting to load data from the Excel files.");
 
-        Path directory = Paths.get("../SAPVM/");
+        Path directory = Paths.get("C:/Network_file/");
 
         try (Stream<Path> paths = Files.walk(directory)) {
             Optional<Path> sapFilePath = paths
