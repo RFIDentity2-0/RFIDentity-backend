@@ -1,6 +1,5 @@
 package com.rfidentity.api.controller;
 
-import com.rfidentity.api.dto.CurrentInventoryAssetDTO;
 import com.rfidentity.api.dto.CurrentInventoryAssetsWithOutcomeDTO;
 import com.rfidentity.api.dto.LocationAssetsSummaryDTO;
 import com.rfidentity.api.dto.UpdateCommentDTO;
@@ -24,6 +23,7 @@ import java.util.List;
 @RequestMapping("/api/locations")
 @Tag(name = "Locations", description = "Service for locations")
 public interface LocationAssetsSummaryController {
+
     @GetMapping("/locationsToRoomsPage")
     @ResponseStatus(HttpStatus.OK)
     @Operation(

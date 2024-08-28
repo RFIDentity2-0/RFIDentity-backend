@@ -5,17 +5,17 @@ SELECT
     si.description,
     si.room AS sap_room,
     vi.status,
-    vi.location,
+    COALESCE(vi.location, 'Default room') as location,
     vi.building,
     vi.room,
     CASE
         WHEN vi.asset_id IS NULL THEN 'Lack in VM'
         WHEN vi.status = 'Not in Use - Damaged' THEN 'Damaged'
         WHEN vi.status = 'Not in Use - Stock' THEN 'In Stock'
-        END AS item_status
+    END AS item_status
 FROM inventory i
-         JOIN sap_item si ON i.id = si.inventory_id
-         LEFT JOIN vm_item vi ON si.inventory_id = vi.inventory_id AND si.asset_id = vi.asset_id
+    JOIN sap_item si ON i.id = si.inventory_id
+    LEFT JOIN vm_item vi ON si.inventory_id = vi.inventory_id AND si.asset_id = vi.asset_id
 WHERE
     si.inventory_id = (SELECT MAX(id) FROM inventory);
 
@@ -42,10 +42,14 @@ WHERE
 
 CREATE VIEW current_locations_with_assets_number AS
 SELECT
-    location,
-    scanned_date,
-    count (1)
-FROM current_inventory_assets_with_outcome
-WHERE location IS NOT NULL
-  AND inventory_id = (SELECT MAX(id) FROM inventory)
-GROUP BY location, scanned_date
+    cia.location,
+    (
+        SELECT MAX(io.scanned_date) FROM inventory_assets_outcome io WHERE io.location = cia.location
+    ) AS scanned_date,
+    COUNT(1) as count
+FROM current_inventory_assets cia
+    LEFT JOIN inventory_assets_outcome io on io.inventory_id = cia.inventory_id AND io.asset_id = cia.asset_id
+WHERE
+    cia.inventory_id = (SELECT MAX(id) FROM inventory)
+GROUP BY cia.location
+
