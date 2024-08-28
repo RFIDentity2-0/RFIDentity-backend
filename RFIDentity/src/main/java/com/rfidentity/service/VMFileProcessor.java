@@ -35,8 +35,9 @@ public class VMFileProcessor {
                                 if (cell != null) {
                                     int columnIndex = cell.getColumnIndex();
                                     String cellValue = cell.getRawValue();
-                                        rowData.add(cellValue);
-
+                                    rowData.add(cellValue);
+                                } else {
+                                    rowData.add(null);
                                 }
                             });
                         });

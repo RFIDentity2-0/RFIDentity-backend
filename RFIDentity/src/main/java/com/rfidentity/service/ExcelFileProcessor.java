@@ -65,7 +65,7 @@ public class ExcelFileProcessor implements FileProcessor {
                 SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String formatedDate = originalFormat.format(date);
                 System.out.println("formatedDate: " + formatedDate);
-
+                sapItem.setCapitalized_date(LocalDate.parse(formatedDate));
                 sapItem.setAssetId(rowData.get(5));
                 sapItemService.save(sapItem);
             });
@@ -73,6 +73,7 @@ public class ExcelFileProcessor implements FileProcessor {
             vmData.forEach((rowNum, rowData) -> {
                 VmItem vmItem = new VmItem();
                 vmItem.setInventoryId(inventory_id);
+                vmItem.setAssetId(rowData.get(0));
                 vmItem.setSystemName(rowData.get(1));
                 vmItem.setDnsName(rowData.get(2));
                 vmItem.setType(rowData.get(3));
@@ -80,18 +81,20 @@ public class ExcelFileProcessor implements FileProcessor {
                 vmItem.setHardwareType(rowData.get(5));
                 vmItem.setSerialNo(rowData.get(6));
 
-               // int value = Integer.parseInt(rowData.get(7));
-                //Date date = convertExcelDate(value);
-                //SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
-               // String formatedDate = originalFormat.format(date);
-                //System.out.println("formatedDate: " + formatedDate);
-
-                vmItem.setAssetId(rowData.get(0));
+                int value = Integer.parseInt(rowData.get(7));
+                Date date = convertExcelDate(value);
+                SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String formatedDate = originalFormat.format(date);
+                System.out.println("formatedDate: " + formatedDate);
+                vmItem.setDateOfInstallation(LocalDate.parse(formatedDate));
                 vmItem.setStatus(rowData.get(10));
-                //vmItem.setDepartment(rowData.get(11));
-               // vmItem.setLocation(rowData.get(21));
-               // vmItem.setBuilding(rowData.get(22));
-                //vmItem.setRoom(rowData.get(23));
+                vmItem.setDepartment(rowData.get(11));
+                vmItem.setPerson_id(rowData.get(14));
+                vmItem.setLastName(rowData.get(13));
+                vmItem.setFirstName(rowData.get(17));
+                vmItem.setLocation(rowData.get(20));
+                vmItem.setBuilding(rowData.get(21));
+                vmItem.setRoom(rowData.get(22));
                 vmItemService.save(vmItem);
             });
 

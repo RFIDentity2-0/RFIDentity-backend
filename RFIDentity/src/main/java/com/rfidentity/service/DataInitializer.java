@@ -26,7 +26,7 @@ public class DataInitializer {
 
         log.info("The database is empty, starting to load data from the Excel files.");
 
-        Path directory = Paths.get("C:/Network_file");
+        Path directory = Paths.get("../SAPVM/");
 
         try (Stream<Path> paths = Files.walk(directory)) {
             Optional<Path> sapFilePath = paths
@@ -42,15 +42,6 @@ public class DataInitializer {
                 return;
             }
 
-            Path oldFileDirectory = Paths.get("C:/Users/ext1/Documents/GitHub/RFIDentity-backend/RFIDentity/src/main/resources/SAPVM/oldfile");
-            if (Files.notExists(oldFileDirectory)) {
-                try {
-                    Files.createDirectory(oldFileDirectory);
-                } catch (IOException e) {
-                    log.error("Failed to create oldfile directory: " + e.getMessage(), e);
-                    return;
-                }
-            }
 
             excelFileProcessor.process(sapFilePath.get(), vmFilePath.get());
 
@@ -58,8 +49,8 @@ public class DataInitializer {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
             String formattedDateTime = localDateTime.format(formatter);
 
-            Files.move(sapFilePath.get(), sapFilePath.get().resolveSibling("C:/Users/ext1/Documents/GitHub/RFIDentity-backend/RFIDentity/src/main/resources/SAPVM/oldfile/SAPOLD_" + formattedDateTime + ".xlsx"));
-            Files.move(vmFilePath.get(), vmFilePath.get().resolveSibling("C:/Users/ext1/Documents/GitHub/RFIDentity-backend/RFIDentity/src/main/resources/SAPVM/oldfile/VMOLD_" + formattedDateTime + ".xlsx"));
+            Files.move(sapFilePath.get(), sapFilePath.get().resolveSibling("C:/oldfile/SAPOLD_" + formattedDateTime + ".xlsx"));
+            Files.move(vmFilePath.get(), vmFilePath.get().resolveSibling("C:/oldfile/VMOLD_" + formattedDateTime + ".xlsx"));
 
         } catch (Exception e) {
             log.error("Error processing files: " + e.getMessage(), e);
