@@ -64,7 +64,7 @@ public interface LocationAssetsSummaryController {
     }
     )
     ResponseEntity<Page<CurrentInventoryAssetsWithOutcomeDTO>> getAssetsByLocation(
-            @RequestParam String location,
+            @RequestParam (required = false) String location,
             @SortDefault(sort = "assetId", direction = Sort.Direction.DESC)
             @PageableDefault(size = 20) final Pageable pageable
     );
