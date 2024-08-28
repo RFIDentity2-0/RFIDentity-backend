@@ -17,6 +17,7 @@ class SAPFileProcessorTest {
         String absolutePath = f.getAbsolutePath();
         try {
             Map<Integer, List<String>> dataFromExcel = instance.readExcel(new File("src/test/resources/SAP_20240414.xlsx"));
+            System.out.println(dataFromExcel);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
