@@ -59,16 +59,20 @@ public class LocationAssetsSummaryServiceImpl implements LocationAssetsSummarySe
         List<LocationAssetsSummaryDTO> locationList = groupedByLocation.entrySet().stream()
                 .map(entry -> {
                     String loc = entry.getKey();
-                    List<AssetDetailDTO> assetDTOs = entry.getValue().stream()
+                    List<LocationAssetsSummary> locationAssets = entry.getValue();
+
+                    List<AssetDetailDTO> assetDTOs = locationAssets.stream()
+                            .limit(8)
                             .map(asset -> AssetDetailDTO.builder()
                                     .withAssetId(asset.getAssetId())
                                     .withDescription(asset.getDescription())
                                     .withItemStatus(asset.getItemStatus())
                                     .build())
                             .collect(Collectors.toList());
+
                     return LocationAssetsSummaryDTO.builder()
                             .withLocation(loc)
-                            .withAssetCount(assets.getFirst().getAssetCount())
+                            .withAssetCount((long) locationAssets.size())
                             .withAssets(assetDTOs)
                             .build();
                 })

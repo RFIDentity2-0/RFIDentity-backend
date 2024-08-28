@@ -30,5 +30,4 @@ FROM
 WHERE
     si.inventory_id = (SELECT MAX(id) FROM inventory)
 ORDER BY
-    vi.location, io.asset_id
-    LIMIT 8;
+    vi.location, io.asset_id;
