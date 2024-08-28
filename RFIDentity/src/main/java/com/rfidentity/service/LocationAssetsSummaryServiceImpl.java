@@ -41,25 +41,25 @@ public class LocationAssetsSummaryServiceImpl implements LocationAssetsSummarySe
 
     @Override
     public Page<LocationAssetsSummaryDTO> getLocationAssetsSummary(List<String> locations, Pageable pageable) {
-        Page<LocationAssetsSummary> page;
+        List<LocationAssetsSummary> assets;
 
         if (locations != null && !locations.isEmpty()) {
-            page = locationAssetsSummaryRepository.findByLocationIn(locations, pageable);
+            assets = locationAssetsSummaryRepository.findByLocationIn(locations);
         } else {
-            page = locationAssetsSummaryRepository.findAll(pageable);
+            assets = locationAssetsSummaryRepository.findAll();
         }
 
-        Map<String, List<LocationAssetsSummary>> groupedByLocation = page.getContent().stream()
+        Map<String, List<LocationAssetsSummary>> groupedByLocation = assets.stream()
                 .filter(asset -> asset != null)
                 .collect(Collectors.groupingBy(asset -> {
                     String location = asset.getLocation();
                     return (location == null || location.isEmpty()) ? "Default Room" : location;
                 }));
 
-        List<LocationAssetsSummaryDTO> list = groupedByLocation.entrySet().stream()
+        List<LocationAssetsSummaryDTO> locationList = groupedByLocation.entrySet().stream()
                 .map(entry -> {
                     String loc = entry.getKey();
-                    List<AssetDetailDTO> assets = entry.getValue().stream()
+                    List<AssetDetailDTO> assetDTOs = entry.getValue().stream()
                             .map(asset -> AssetDetailDTO.builder()
                                     .withAssetId(asset.getAssetId())
                                     .withDescription(asset.getDescription())
@@ -68,13 +68,17 @@ public class LocationAssetsSummaryServiceImpl implements LocationAssetsSummarySe
                             .collect(Collectors.toList());
                     return LocationAssetsSummaryDTO.builder()
                             .withLocation(loc)
-                            .withAssetCount((long) assets.size())
-                            .withAssets(assets)
+                            .withAssetCount((long) assetDTOs.size())
+                            .withAssets(assetDTOs)
                             .build();
                 })
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(list, pageable, page.getTotalElements());
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), locationList.size());
+        List<LocationAssetsSummaryDTO> paginatedList = locationList.subList(start, end);
+
+        return new PageImpl<>(paginatedList, pageable, locationList.size());
     }
 
 

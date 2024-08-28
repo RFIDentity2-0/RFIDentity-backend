@@ -43,7 +43,7 @@ public interface LocationAssetsSummaryController {
     )
     ResponseEntity<Page<LocationAssetsSummaryDTO>> getLocationAssetsSummary(
             @RequestParam(value = "location", required = false) List<String> locations,
-            @PageableDefault(size = 20) final Pageable pageable
+            final Pageable pageable
     );
 
     @GetMapping("/insideLocation")

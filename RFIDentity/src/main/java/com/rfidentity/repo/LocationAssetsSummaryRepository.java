@@ -13,6 +13,6 @@ import java.util.List;
 @Repository
 public interface LocationAssetsSummaryRepository extends JpaRepository<LocationAssetsSummary, String>, JpaSpecificationExecutor<CurrentInventoryAsset> {
 
-    Page<LocationAssetsSummary> findByLocationIn(List<String> locations, Pageable pageable);
+    List<LocationAssetsSummary> findByLocationIn(List<String> locations);
 
 }
