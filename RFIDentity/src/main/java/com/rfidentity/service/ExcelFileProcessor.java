@@ -64,7 +64,7 @@ public class ExcelFileProcessor implements FileProcessor {
                 SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String formatedDate = originalFormat.format(date);
                 System.out.println("formatedDate: " + formatedDate);
-                sapItem.setCapitalizedDate(LocalDate.parse(formatedDate));
+                //sapItem.setCapitalizedDate(LocalDate.parse(formatedDate));
 
                 sapItem.setAssetId(rowData.get(5));
                 sapItemService.save(sapItem);
