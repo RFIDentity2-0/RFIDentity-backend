@@ -28,7 +28,7 @@ public interface MobileController {
     @PostMapping("/updateOutcome")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
-            summary = "Update data for outcome table.",
+            summary = "Update data for outcome assets",
             description = "Post data into the table."
     )
     @ApiResponses(value = {
