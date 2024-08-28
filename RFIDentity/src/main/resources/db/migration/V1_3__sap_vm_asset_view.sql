@@ -11,17 +11,15 @@ SELECT
     vi.serial_no,
     vi.status,
     vi.department
-FROM
-    sap_item si
-        FULL OUTER JOIN
-    vm_item vi ON si.asset_id = vi.asset_id
-WHERE
-    COALESCE(si.inventory_id, vi.inventory_id) = (SELECT MAX(id) FROM inventory);
+FROM inventory i
+         JOIN sap_item si ON i.id = si.inventory_id
+         FULL OUTER JOIN vm_item vi ON si.asset_id = vi.asset_id AND si.inventory_id = vi.inventory_id
+WHERE i.id = (SELECT MAX(id) FROM inventory);
 
 CREATE VIEW location_assets_summary AS
 SELECT
-    COUNT(vi.asset_id) OVER (PARTITION BY io.location) AS asset_count,
-        vi.asset_id,
+    COUNT(si.asset_id) OVER (PARTITION BY io.location) AS asset_count,
+        si.asset_id,
     vi.location,
     si.description,
     io.status
