@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Component
@@ -18,52 +19,50 @@ import java.util.stream.Stream;
 @Slf4j
 public class DataInitializer {
 
-    private final SapItemService sapItemService;
     private final ExcelFileProcessor excelFileProcessor;
 
     @PostConstruct
     public void initializeData() {
 
-        log.info("The database is empty, starting to load data from the Excel file.");
+        log.info("The database is empty, starting to load data from the Excel files.");
 
-        var filePath = Paths.get("src/main/resources/SAPVM/SAP.xlsx");
-        var filePath2 = Paths.get("src/main/resources/SAPVM/VM.xlsx");
+        Path directory = Paths.get("C:/Network_file");
 
-        Path oldFileDirectory = Paths.get("src/main/resources/SAPVM/oldfile");
-        if (Files.notExists(oldFileDirectory)) {
-            try {
-                Files.createDirectory(oldFileDirectory);
-            } catch (IOException e) {
-                log.error("Failed to create oldfile directory: " + e.getMessage(), e);
+        try (Stream<Path> paths = Files.walk(directory)) {
+            Optional<Path> sapFilePath = paths
+                    .filter(path -> path.getFileName().toString().startsWith("SAP") && path.getFileName().toString().endsWith(".xlsx"))
+                    .findFirst();
+
+            Optional<Path> vmFilePath = Files.walk(directory)
+                    .filter(path -> path.getFileName().toString().startsWith("VM") && path.getFileName().toString().endsWith(".xlsx"))
+                    .findFirst();
+
+            if (sapFilePath.isEmpty() || vmFilePath.isEmpty()) {
+                log.warn("SAP or VM file not found.");
                 return;
             }
-        }
 
-        try {
-            excelFileProcessor.process(filePath, filePath2);
+            Path oldFileDirectory = Paths.get("C:/Users/ext1/Documents/GitHub/RFIDentity-backend/RFIDentity/src/main/resources/SAPVM/oldfile");
+            if (Files.notExists(oldFileDirectory)) {
+                try {
+                    Files.createDirectory(oldFileDirectory);
+                } catch (IOException e) {
+                    log.error("Failed to create oldfile directory: " + e.getMessage(), e);
+                    return;
+                }
+            }
+
+            excelFileProcessor.process(sapFilePath.get(), vmFilePath.get());
 
             LocalDateTime localDateTime = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
             String formattedDateTime = localDateTime.format(formatter);
 
-            if (Files.exists(filePath)) {
-                Files.move(filePath, filePath.resolveSibling("oldfile/SAPOLD_" + formattedDateTime + ".xlsx"));
-            } else {
-                log.warn("File not found: {}", filePath);
-            }
-
-            if (Files.exists(filePath2)) {
-                Files.move(filePath2, filePath2.resolveSibling("oldfile/VMOLD_" + formattedDateTime + ".xlsx"));
-            } else {
-                log.warn("File not found: {}", filePath2);
-            }
-
-            log.info("Data has been successfully loaded into the database.");
+            Files.move(sapFilePath.get(), sapFilePath.get().resolveSibling("C:/Users/ext1/Documents/GitHub/RFIDentity-backend/RFIDentity/src/main/resources/SAPVM/oldfile/SAPOLD_" + formattedDateTime + ".xlsx"));
+            Files.move(vmFilePath.get(), vmFilePath.get().resolveSibling("C:/Users/ext1/Documents/GitHub/RFIDentity-backend/RFIDentity/src/main/resources/SAPVM/oldfile/VMOLD_" + formattedDateTime + ".xlsx"));
 
         } catch (Exception e) {
             log.error("Error processing files: " + e.getMessage(), e);
         }
-
     }
-
 }

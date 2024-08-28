@@ -43,7 +43,8 @@ public class ListAndWalkTest {
     } // end of main
 
     private static void doSomething(String label, Path path) {
-        System.out.println(label + "\t: " + path);
+        String a = label;
+        System.out.println(a + "\t: " + path);
     }
 
     private static void log(String label, IOException ex) {
