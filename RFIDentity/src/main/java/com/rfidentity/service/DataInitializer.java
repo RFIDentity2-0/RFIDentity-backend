@@ -26,7 +26,7 @@ public class DataInitializer {
 
         log.info("The database is empty, starting to load data from the Excel files.");
 
-        Path directory = Paths.get("C:/Network_file");
+        Path directory = Paths.get("../SAPVM/");
 
         try (Stream<Path> paths = Files.walk(directory)) {
             Optional<Path> sapFilePath = paths
@@ -42,15 +42,6 @@ public class DataInitializer {
                 return;
             }
 
-            Path oldFileDirectory = Paths.get("C:/oldfile/");
-            if (Files.notExists(oldFileDirectory)) {
-                try {
-                    Files.createDirectory(oldFileDirectory);
-                } catch (IOException e) {
-                    log.error("Failed to create oldfile directory: " + e.getMessage(), e);
-                    return;
-                }
-            }
 
             excelFileProcessor.process(sapFilePath.get(), vmFilePath.get());
 

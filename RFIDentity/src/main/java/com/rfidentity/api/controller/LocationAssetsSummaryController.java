@@ -27,7 +27,7 @@ public interface LocationAssetsSummaryController {
     @GetMapping("/locationsToRoomsPage")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Get locations with assets for rooms view",
+            summary = "Get locations with 8 assets for rooms view",
             description = "Returns locations with assets from database."
     )
     @ApiResponses(value = {
@@ -43,13 +43,14 @@ public interface LocationAssetsSummaryController {
     )
     ResponseEntity<Page<LocationAssetsSummaryDTO>> getLocationAssetsSummary(
             @RequestParam(value = "location", required = false) List<String> locations,
+            @SortDefault(sort = "location", direction = Sort.Direction.ASC)
             final Pageable pageable
     );
 
     @GetMapping("/insideLocation")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Get data for specific location",
+            summary = "Get assets data for specific location if location is null assets will go to default room",
             description = "Returns assets data for specific locations from database."
     )
     @ApiResponses(value = {
@@ -65,7 +66,7 @@ public interface LocationAssetsSummaryController {
     )
     ResponseEntity<Page<CurrentInventoryAssetsWithOutcomeDTO>> getAssetsByLocation(
             @RequestParam (required = false) String location,
-            @SortDefault(sort = "assetId", direction = Sort.Direction.DESC)
+            @SortDefault(sort = "assetId", direction = Sort.Direction.ASC)
             @PageableDefault(size = 20) final Pageable pageable
     );
 
@@ -73,7 +74,7 @@ public interface LocationAssetsSummaryController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Put comment for specific asset",
-            description = "Update comment for specific asset to the database."
+            description = "Update comment for specific asset from database."
     )
     @ApiResponses(value = {
             @ApiResponse(

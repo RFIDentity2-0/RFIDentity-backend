@@ -20,8 +20,8 @@ public interface SapVmAssetController {
     @GetMapping("/{assetId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Get data of specific assets for action page.",
-            description = "Returns data of specific assets from database."
+            summary = "Get data of specific asset for action page.",
+            description = "Returns data of specific asset from database."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -40,8 +40,8 @@ public interface SapVmAssetController {
     @PutMapping("/sap/{assetId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Update data of specific sap assets for action page.",
-            description = "Put data of specific sap assets to database."
+            summary = "Update data of specific sap asset for action page.",
+            description = "Put data of specific sap asset to database."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -61,8 +61,8 @@ public interface SapVmAssetController {
     @PutMapping("/vm/{assetId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Update data of specific vm assets for action page.",
-            description = "Put data of specific vm assets to database."
+            summary = "Update data of specific vm asset for action page.",
+            description = "Put data of specific vm asset to database."
     )
     @ApiResponses(value = {
             @ApiResponse(
