@@ -59,13 +59,18 @@ public class ExcelFileProcessor implements FileProcessor {
                 sapItem.setInventoryId(inventory_id);
                 sapItem.setDescription(rowData.get(3));
                 sapItem.setRoom(rowData.get(4));
-
-                int value = Integer.parseInt(rowData.get(2));
-                Date date = convertExcelDate(value);
-                SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String formatedDate = originalFormat.format(date);
-                System.out.println("formatedDate: " + formatedDate);
-                sapItem.setCapitalized_date(LocalDate.parse(formatedDate));
+                if(rowData.get(2)==null)
+                {
+                    sapItem.setCapitalized_date(null);
+                }
+                else {
+                    int value = Integer.parseInt(rowData.get(2));
+                    Date date = convertExcelDate(value);
+                    SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String formatedDate = originalFormat.format(date);
+                    System.out.println("formatedDate: " + formatedDate);
+                    sapItem.setCapitalized_date(LocalDate.parse(formatedDate));
+                }
                 sapItem.setAssetId(rowData.get(5));
                 sapItemService.save(sapItem);
             });
@@ -80,13 +85,17 @@ public class ExcelFileProcessor implements FileProcessor {
                 vmItem.setManufacturer(rowData.get(4));
                 vmItem.setHardwareType(rowData.get(5));
                 vmItem.setSerialNo(rowData.get(6));
-
-                int value = Integer.parseInt(rowData.get(7));
-                Date date = convertExcelDate(value);
-                SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String formatedDate = originalFormat.format(date);
-                System.out.println("formatedDate: " + formatedDate);
-                vmItem.setDateOfInstallation(LocalDate.parse(formatedDate));
+                if(rowData.get(7)==null)
+                {
+                    vmItem.setDateOfInstallation(null);
+                }
+                else {
+                    int value = Integer.parseInt(rowData.get(7));
+                    Date date = convertExcelDate(value);
+                    SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String formatedDate = originalFormat.format(date);
+                    System.out.println("formatedDate: " + formatedDate);
+                    vmItem.setDateOfInstallation(LocalDate.parse(formatedDate));}
                 vmItem.setStatus(rowData.get(10));
                 vmItem.setDepartment(rowData.get(11));
                 vmItem.setPerson_id(rowData.get(14));

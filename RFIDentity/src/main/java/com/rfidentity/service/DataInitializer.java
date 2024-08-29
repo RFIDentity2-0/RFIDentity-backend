@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,7 +25,7 @@ public class DataInitializer {
 
         log.info("The database is empty, starting to load data from the Excel files.");
 
-        Path directory = Paths.get("../SAPVM/");
+        Path directory = Paths.get("C:/Network_file/");
 
         try (Stream<Path> paths = Files.walk(directory)) {
             Optional<Path> sapFilePath = paths
@@ -49,8 +48,8 @@ public class DataInitializer {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
             String formattedDateTime = localDateTime.format(formatter);
 
-            Files.move(sapFilePath.get(), sapFilePath.get().resolveSibling("C:/oldfile/SAPOLD_" + formattedDateTime + ".xlsx"));
-            Files.move(vmFilePath.get(), vmFilePath.get().resolveSibling("C:/oldfile/VMOLD_" + formattedDateTime + ".xlsx"));
+     //       Files.move(sapFilePath.get(), sapFilePath.get().resolveSibling("C:/oldfile/SAPOLD_" + formattedDateTime + ".xlsx"));
+       //     Files.move(vmFilePath.get(), vmFilePath.get().resolveSibling("C:/oldfile/VMOLD_" + formattedDateTime + ".xlsx"));
 
         } catch (Exception e) {
             log.error("Error processing files: " + e.getMessage(), e);

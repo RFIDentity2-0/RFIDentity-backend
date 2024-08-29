@@ -1,4 +1,4 @@
-package com.rfidentity;
+package com.rfidentity.configuration;
 
 import com.rfidentity.service.*;
 import jakarta.annotation.PreDestroy;
@@ -9,7 +9,6 @@ import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.time.Duration;
 
