@@ -1,5 +1,6 @@
 package com.rfidentity.service;
 
+import com.rfidentity.configuration.DirectoryWatcherConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +49,8 @@ public class DataInitializer {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
             String formattedDateTime = localDateTime.format(formatter);
 
-            //Files.move(sapFilePath.get(), Paths.get("Test/").resolveSibling("Test/oldfile/SAPOLD_" + formattedDateTime + ".xlsx"));
-            //Files.move(vmFilePath.get(),  Paths.get("Test/").resolveSibling("Test/oldfile/VMOLD_" + formattedDateTime + ".xlsx"));
+            Files.move(sapFilePath.get(), Paths.get("Test/").resolveSibling("Test/oldfile/SAPOLD_" + formattedDateTime + ".xlsx"));
+            Files.move(vmFilePath.get(),  Paths.get("Test/").resolveSibling("Test/oldfile/VMOLD_" + formattedDateTime + ".xlsx"));
 
         } catch (Exception e) {
             log.error("Error processing files: " + e.getMessage(), e);
