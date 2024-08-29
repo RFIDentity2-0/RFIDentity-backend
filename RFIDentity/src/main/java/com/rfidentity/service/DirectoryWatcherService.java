@@ -16,7 +16,7 @@ public class DirectoryWatcherService {
         this.dataInitializer = dataInitializer;
     }
 
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelay = 10000)
     public void ensureMonitoringIsActive() {
         if (!isWatching) {
             directoryWatcherConfig.startWatching();
