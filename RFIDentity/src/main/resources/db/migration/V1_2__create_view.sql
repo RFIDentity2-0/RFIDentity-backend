@@ -5,7 +5,7 @@ SELECT
     si.description,
     si.room AS sap_room,
     vi.status,
-    COALESCE(vi.location, 'Default room') as location,
+    COALESCE(vi.location, 'Default Room') as location,
     vi.building,
     vi.room,
     CASE
