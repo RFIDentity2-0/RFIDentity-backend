@@ -1,4 +1,4 @@
-package com.rfidentity.service;
+package com.rfidentity.configuration;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;

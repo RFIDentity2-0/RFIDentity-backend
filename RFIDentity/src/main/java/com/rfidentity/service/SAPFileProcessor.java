@@ -35,16 +35,34 @@ public class SAPFileProcessor {
                         AtomicReference<String> column1 = new AtomicReference<>();
                         int cellIdx = 0;
                         r.forEach(cell -> {
-
+                            if (cell != null){}
                             int columnIndex = cell.getColumnIndex();
                             String cellValue = cell.getRawValue();
 
                             if (columnIndex == 0) {
-                                column0.set(cellValue);
+
+                                if (cell != null){
+                                    column0.set(cellValue);
+
+                                }
+                                else{
+                                    column0.set(null);
+                                }
                             } else if (columnIndex == 1) {
-                                column1.set(cellValue);
+                                if (cell != null){
+                                    column1.set(cellValue);
+
+                                }
+                                else{
+                                    column1.set(null);
+                                }
                             } if (columnIndex == 0 || columnIndex == 1 || columnIndex == 2 || columnIndex == 3 || columnIndex == 8) {
-                                rowData.add(cellValue);
+                                if(cell != null){
+                                    rowData.add(cellValue);
+                            }
+                                else {
+                                    rowData.add(null);
+                                }
                             }
                         });
                         if (column0.get() != null && column1.get() != null) {
