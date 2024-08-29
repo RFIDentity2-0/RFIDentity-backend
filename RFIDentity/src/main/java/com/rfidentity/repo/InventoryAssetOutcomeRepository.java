@@ -16,6 +16,4 @@ public interface InventoryAssetOutcomeRepository extends JpaRepository<Inventory
 
     Optional<InventoryAssetsOutcome> findByInventoryIdAndAssetId(Long inventoryId, String assetId);
 
-    @Query("SELECT COUNT(io) > 0 FROM InventoryAssetsOutcome io WHERE io.inventoryId = :inventoryId AND io.assetId = :assetId")
-    boolean existsByInventoryIdAndAssetId(@Param("inventoryId") Long inventoryId, @Param("assetId") String assetId);
 }
