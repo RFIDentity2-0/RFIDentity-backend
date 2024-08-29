@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class DirectoryWatcherService {
 
     private final DirectoryWatcherConfig directoryWatcherConfig;
-    private final DataInitializer dataInitializer; // Wstrzykiwanie DataInitializer
+    private final DataInitializer dataInitializer;
     private boolean isWatching = false;
 
     public DirectoryWatcherService(DirectoryWatcherConfig directoryWatcherConfig, DataInitializer dataInitializer) {
@@ -16,13 +16,12 @@ public class DirectoryWatcherService {
         this.dataInitializer = dataInitializer;
     }
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 30000)
     public void ensureMonitoringIsActive() {
         if (!isWatching) {
             directoryWatcherConfig.startWatching();
             isWatching = true;
             System.out.println("Directory watcher is now active");
-
             dataInitializer.initializeData();
             isWatching = false;
         } else {

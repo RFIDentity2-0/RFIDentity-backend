@@ -24,7 +24,7 @@ public class DataInitializer {
     @PostConstruct
     public void initializeData() {
 
-        log.info("The database is empty, starting to load data from the Excel files.");
+        log.info("Starting to load data from the Excel files.");
 
         Path directory = Paths.get("Test/SAPVM/");
 

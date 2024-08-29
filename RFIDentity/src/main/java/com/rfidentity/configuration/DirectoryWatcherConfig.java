@@ -56,7 +56,5 @@ public class DirectoryWatcherConfig {
         watching = false;
     }
 
-    public boolean isWatching() {
-        return watching;
-    }
+ 
 }

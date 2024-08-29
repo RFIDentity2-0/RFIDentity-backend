@@ -41,7 +41,6 @@ public class ExcelFileProcessor implements FileProcessor {
 
         try {
             if (!sapFile.toFile().exists() || !vmFile.toFile().exists()) {
-                log.warn("Pliki SAP lub VM nie zostały znalezione. Inwentaryzacja rozpocznie się, gdy załadujesz pliki.");
                 return;
             }
 
