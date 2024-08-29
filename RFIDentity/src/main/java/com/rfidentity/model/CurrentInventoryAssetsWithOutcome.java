@@ -18,8 +18,8 @@ public class CurrentInventoryAssetsWithOutcome {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "item_status")
-    private String itemStatus;
+    @Column(name = "inventory_status")
+    private String inventoryStatus;
 
     @Column(name = "comment")
     private String comment;

@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class CurrentInventoryAssetsWithOutcomeDTO {
     private String assetId;
     private String description;
-    private String itemStatus;
+    private String inventoryStatus;
     private String comment;
 }

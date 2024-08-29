@@ -66,7 +66,7 @@ public class LocationAssetsSummaryServiceImpl implements LocationAssetsSummarySe
                             .map(asset -> AssetDetailDTO.builder()
                                     .withAssetId(asset.getAssetId())
                                     .withDescription(asset.getDescription())
-                                    .withItemStatus(asset.getItemStatus())
+                                    .withInventoryStatus(asset.getInventoryStatus())
                                     .build())
                             .collect(Collectors.toList());
 
@@ -101,7 +101,7 @@ public class LocationAssetsSummaryServiceImpl implements LocationAssetsSummarySe
         return CurrentInventoryAssetsWithOutcomeDTO.builder()
                 .withAssetId(asset.getAssetId())
                 .withDescription(asset.getDescription())
-                .withItemStatus(asset.getItemStatus())
+                .withInventoryStatus(asset.getInventoryStatus())
                 .withComment(asset.getComment())
                 .build();
     }

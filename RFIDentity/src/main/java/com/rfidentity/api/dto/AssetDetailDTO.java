@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class AssetDetailDTO {
     private String assetId;
     private String description;
-    private String itemStatus;
+    private String inventoryStatus;
 }
